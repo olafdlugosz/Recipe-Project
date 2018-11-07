@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Segment, Input, Button, Dropdown, Grid, GridColumn, Container } from 'semantic-ui-react';
 import {IRecipe, IIngredients, INutritionInfo} from '../interfaces/IRecipe';
 import {Recipe} from '../components/Recipe';
+import {  Router, Route, Link, Redirect} from "react-router-dom";
 import Store from "../interfaces/Store";
 import {connect, update} from 'react-imperator';
 
@@ -238,6 +239,8 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
                     placeholder='choose your health option'
                     onChange={this.handleHealthOptionChange}
                 />
+                <Link to="/FoodSearch">Go to Food Analyzer</Link>
+                <Link to="/Checkout">Go to Checkout</Link>
                 </Segment>
                 <Button onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
                 </GridColumn>
