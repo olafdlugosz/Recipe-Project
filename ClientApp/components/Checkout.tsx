@@ -18,16 +18,7 @@ export const Checkout =  connect(class extends React.Component<ICheckoutProps, I
     this.state = {
     }
   }
-//   <Segment>
 
-//   <Header as ="h3">{recipe.label}</Header>
-//   <Image size ="small" label = {recipe.source} src = {recipe.image}></Image>
-//  <Icon name="plus" onClick={this.addToBasket}>Add To Basket!</Icon>
-//   <div>
-//   <Link to="/RecipeDetail" onClick={() => Store.selectedRecipe = recipe}>Details</Link>
-  
-//   </div>       
-// </Segment>
   public render() {
       const {basketRecipes} = this.props
     return (
