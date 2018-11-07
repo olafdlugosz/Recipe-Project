@@ -125,8 +125,8 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
             <Grid.Column width={3}>
               <Header as="h5">Basic Nutrients:</Header>
               <React.Fragment>
-                {Object.keys(food.nutrients).map((key: any) => {
-                  return <div>{key}: {this.formatNutrientsTotal(food.nutrients[key])}</div>;
+                {Object.keys(food.nutrients).map((key: any, index: number) => {
+                  return <div key={index}>{key}: {this.formatNutrientsTotal(food.nutrients[key])}</div>;
                 })}
               </React.Fragment>
             </Grid.Column>

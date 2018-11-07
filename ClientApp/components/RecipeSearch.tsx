@@ -41,11 +41,11 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
         .then(res => res.json()).then(res => {
 
             console.log(res);
-            this.transformIntoInterfaceObject(res);
+            this.transformIntoIRecipe(res);
         })
 
     }
-    private transformIntoInterfaceObject = (apiResponse : any) => {
+    private transformIntoIRecipe = (apiResponse : any) => {
 
         let recipeArray: IRecipe[];
         let recipeObject: IRecipe;

@@ -1,8 +1,7 @@
 import { IRecipe } from './IRecipe';
 
 const Store = {
-    selectedRecipe: {} as IRecipe,
-    recipes: {} as IRecipe[]
+    selectedRecipe: {} as IRecipe
 }
 
 export {Store as default};

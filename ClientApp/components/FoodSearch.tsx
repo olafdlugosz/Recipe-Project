@@ -2,22 +2,23 @@ import * as React from 'react';
 import { Segment, Input, Button, Dropdown, Grid, GridColumn, Container, List, ListItem } from 'semantic-ui-react';
 import { IFood, IMeasure } from '../interfaces/IFood';
 import {Food} from './Food';
+import {connect, update} from 'react-imperator';
 
 export interface IFoodSearchProps {
+    foods?: IFood[];
 }
 
 export interface IFoodSearchState {
     query: string;
-    foods: IFood[];
 }
 
-export class FoodSearch extends React.Component<IFoodSearchProps, IFoodSearchState> {
+export const FoodSearch = connect(class  extends React.Component<IFoodSearchProps, IFoodSearchState> {
     constructor(props: IFoodSearchProps) {
         super(props);
 
         this.state = {
             query: "",
-            foods: []
+           // foods: []
         }
     }
     private fetchSelection = () => {
@@ -26,11 +27,11 @@ export class FoodSearch extends React.Component<IFoodSearchProps, IFoodSearchSta
             .then(res => res.json()).then(res => {
 
                 console.log(res);
-                 this.transformIntoIFoodObject(res);
+                 this.transformIntoIFood(res);
             })
 
     }
-    private transformIntoIFoodObject = (apiResponse: any) => {
+    private transformIntoIFood = (apiResponse: any) => {
 
         let foodArray: IFood[];
         let foodObject: IFood;
@@ -48,7 +49,6 @@ export class FoodSearch extends React.Component<IFoodSearchProps, IFoodSearchSta
                 measuresObject = {uri: element.uri, label: element.label }
                 measuresArray.push(measuresObject);
             })
-           // Object.prototype.hasOwnProperty.call(request.query, 'whatever')
            foodObject = {
                category: food.category,
                categoryLabel: food.categoryLabel,
@@ -66,7 +66,7 @@ export class FoodSearch extends React.Component<IFoodSearchProps, IFoodSearchSta
             }
             foodArray.push(foodObject);
         });
-        this.setState({foods: foodArray});
+        update<IFood[]>("foods", () => foodArray)
     }
     private onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.which != 13 || !(this.state.query.trim())) {
@@ -79,22 +79,23 @@ export class FoodSearch extends React.Component<IFoodSearchProps, IFoodSearchSta
     }
 
     public render() {
-        const { query, foods } = this.state;
+        const { query } = this.state;
+        const{foods} = this.props;
         return (
             <div>
             <Segment>
                 <Input value={query} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="choose your main ingredient" />
             </Segment>
             <React.Fragment>
-            {foods.length > 0?
+            {foods &&
                 foods.map((item: IFood, index: number) => {
                     return <List key={index}>
                     <ListItem><Food food = {item}/></ListItem>
                     </List>
                 })
-                : <React.Fragment></React.Fragment>}
+                }
             </React.Fragment>
             </div>
         );
     }
-}
+},["foods"])

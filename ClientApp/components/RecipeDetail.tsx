@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IRecipe, IIngredients, INutritionInfo } from 'ClientApp/interfaces/IRecipe';
 import Store from "../interfaces/Store";
-import { Container, Segment,TableRow, Image, Grid, Header, List, Table, TableBody, TableCell, TableFooter, TableHeader, TableHeaderCell } from 'semantic-ui-react';
+import { Container, Segment,TableRow, Icon, Image, Grid, Header, List, Table, TableBody, TableCell, TableFooter, TableHeader, TableHeaderCell } from 'semantic-ui-react';
 import { Router, Route, Link, Redirect } from "react-router-dom";
 import { RecipeSearch } from './RecipeSearch';
 import {update, connect} from "react-imperator";
@@ -41,7 +41,14 @@ export class RecipeDetail extends React.Component<IRecipeDetailProps, IRecipeDet
       return tot;
     }
   }
+  private addToBasket = () => {
 
+    update<IRecipe[]>("basketRecipes", (basket: IRecipe[]) =>{
+      console.log("basket:", basket)
+      return [...(basket || []),Store.selectedRecipe]})
+  
+
+}
 
   public render() {
     const recipe = Store.selectedRecipe
@@ -71,8 +78,12 @@ export class RecipeDetail extends React.Component<IRecipeDetailProps, IRecipeDet
                   })}
                 </List>
                 <a href={recipe.url}>Go to Cooking Instructions</a>
+                <Link to="/Checkout">Go to Checkout</Link>
               </Grid.Column>
-
+              <div>
+              <span>     Add To Basket</span>
+              <Icon name="plus circle" size ="large"onClick={this.addToBasket}/>
+              </div>
 
             </Grid.Row>
           </Grid>
