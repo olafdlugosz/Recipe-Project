@@ -41,9 +41,6 @@ export class RecipeDetail extends React.Component<IRecipeDetailProps, IRecipeDet
       return tot;
     }
   }
-  private updateStateRecipesInRecipeSearch = () => {
-    update<IRecipe[]>("recipes", value => value = Store.recipes);
-  }
 
 
   public render() {
@@ -64,7 +61,7 @@ export class RecipeDetail extends React.Component<IRecipeDetailProps, IRecipeDet
                 </div>
                 <span>Calories: {this.formatWeightOrCalories(recipe.calories)}</span>
                 <div>Total weight: {this.formatWeightOrCalories(recipe.totalWeight)+"g"}</div>
-                <Link to="/" onClick={() => this.updateStateRecipesInRecipeSearch}>Back</Link>
+                <Link to="/" >Back</Link>
               </Grid.Column>
               <Grid.Column width={13}>
                 <List as="ul">

@@ -3,7 +3,7 @@ import { Segment, Input, Button, Dropdown, Grid, GridColumn, Container } from 's
 import {IRecipe, IIngredients, INutritionInfo} from '../interfaces/IRecipe';
 import {Recipe} from '../components/Recipe';
 import Store from "../interfaces/Store";
-import {connect} from 'react-imperator';
+import {connect, update} from 'react-imperator';
 
 export interface IRecipeSearchProps {
     recipes?: IRecipe[];
@@ -16,7 +16,7 @@ export interface IRecipeSearchState {
     diet: string;
     cookTime: number;
     healthOption: string;
-    recipes: IRecipe[];
+   // recipes: IRecipe[];
 }
 
 export const RecipeSearch = connect(class  extends React.Component<IRecipeSearchProps, IRecipeSearchState> {
@@ -30,7 +30,7 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
             diet: '',
             cookTime: 0,
             healthOption: '',
-            recipes : []
+           // recipes : []
         }
     }
     //search/{query}/{startIndex}/{lastIndex}/{typeOfDiet}/{minCalories}/{maxCalories}/{health}/{maxCookTime}
@@ -83,9 +83,9 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
             
             recipeArray.push(recipeObject);
         });
-        this.setState({recipes: recipeArray}, () => {
-            Store.recipes = recipeArray
-        });
+        
+            update<IRecipe[]>("recipes", () => recipeArray)
+        
     }
     private onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.which != 13 || !(this.state.query.trim())) {
@@ -116,7 +116,8 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
         this.setState({ healthOption: selected.value })
     }
     public render() {
-        const { query, recipes } = this.state
+        const { query} = this.state
+        const {recipes} = this.props
         const minCalorieDropdownOptions = [
             { key: 100, text: '100', value: 100 },
             { key: 200, text: '200', value: 200 },
@@ -244,7 +245,7 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
                 <React.Fragment>
                 <Grid columns="4">
                 <Grid.Row>
-                {recipes.length > 0? 
+                {recipes &&
                     
                     recipes.map((x: IRecipe, index: number) => {
                         return <Segment size="small"key={index}>
@@ -253,7 +254,7 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
                         </GridColumn>
                         </Segment>
                         
-                    }) : ""}
+                    })}
                     </Grid.Row>
                     </Grid>
                     </React.Fragment>
