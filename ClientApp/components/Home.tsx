@@ -25,7 +25,6 @@ export class Home extends React.Component<IHomeProps, IHomeState> {
       <Container>
       <Switch>
   <Route exact path='/' component={RecipeSearch}/>
-  {/* both /roster and /roster/:number begin with /roster */}
   <Route path='/Checkout' component={Checkout}/>
   <Route path='/RecipeDetail' component={RecipeDetail}/>
   <Route path='/FoodSearch' component={FoodSearch}/>

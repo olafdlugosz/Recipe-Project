@@ -3,6 +3,7 @@ import { Segment, Input, Button, Dropdown, Grid, GridColumn, Container, List, Li
 import { IFood, IMeasure } from '../interfaces/IFood';
 import {Food} from './Food';
 import {connect, update} from 'react-imperator';
+import {  Router, Route, Link, Redirect} from "react-router-dom";
 
 export interface IFoodSearchProps {
     foods?: IFood[];
@@ -85,6 +86,7 @@ export const FoodSearch = connect(class  extends React.Component<IFoodSearchProp
             <div>
             <Segment>
                 <Input value={query} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="choose your main ingredient" />
+                <Link to="/">Go to Recipe Search</Link>
             </Segment>
             <React.Fragment>
             {foods &&
