@@ -1,13 +1,15 @@
 import * as React from 'react';
-import { Segment, Input, Button, Dropdown, Grid, GridColumn, Container } from 'semantic-ui-react';
+import { Segment, Input, Button, Dropdown, Grid, GridColumn,Icon,Label,Menu, MenuItem, Container } from 'semantic-ui-react';
 import {IRecipe, IIngredients, INutritionInfo} from '../interfaces/IRecipe';
 import {Recipe} from '../components/Recipe';
 import {  Router, Route, Link, Redirect} from "react-router-dom";
 import Store from "../interfaces/Store";
 import {connect, update} from 'react-imperator';
+import {Checkout} from './Checkout';
 
 export interface IRecipeSearchProps {
     recipes?: IRecipe[];
+    basketRecipes?: IRecipe[];
 }
 
 export interface IRecipeSearchState {
@@ -118,7 +120,8 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
     }
     public render() {
         const { query} = this.state
-        const {recipes} = this.props
+        const {recipes, basketRecipes} = this.props
+
         const minCalorieDropdownOptions = [
             { key: 100, text: '100', value: 100 },
             { key: 200, text: '200', value: 200 },
@@ -241,6 +244,16 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
                 />
                 <Link to="/FoodSearch">Go to Food Analyzer</Link>
                 <Link to="/Checkout">Go to Checkout</Link>
+                <Menu compact>
+                <Menu.Item as='a' onClick={() => location.href="#/Checkout"}>
+                <Icon name="cart arrow down" size="large"></Icon>
+                
+                {basketRecipes &&
+                    <Label color='red' floating> {basketRecipes.length}</Label>}
+              
+                </Menu.Item>
+                </Menu>
+
                 </Segment>
                 <Button onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
                 </GridColumn>
@@ -264,4 +277,4 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
                     </Segment>
         );
     }
-},["recipes"])
+},["recipes","basketRecipes"])
