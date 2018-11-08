@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { IFood, IMeasure } from 'ClientApp/interfaces/IFood';
-import { Segment, Header, Label, Dropdown, Button, List, ListItem, Grid, GridColumn, GridRow, ItemContent } from 'semantic-ui-react';
+import { Segment, Header, Label, Dropdown, Button, List, ListItem, Grid, GridColumn, GridRow, ItemContent, Icon, Image, Modal  } from 'semantic-ui-react';
+import { IFoodDetails, IUnitInfo, ITotalDaily, ITotalNutrients, IIngredient, IParsed } from 'ClientApp/interfaces/IFoodDetails';
+import { FoodDetail } from './FoodDetail';
 
 export interface IFoodProps {
   food: IFood;
@@ -9,6 +11,8 @@ export interface IFoodProps {
 export interface IFoodState {
   amount: string;
   selectedUnit: string;
+  foodDetails: IFoodDetails;
+  isFetched: boolean;
 }
 
 export class Food extends React.Component<IFoodProps, IFoodState> {
@@ -17,7 +21,9 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
 
     this.state = {
       amount: "",
-      selectedUnit: ""
+      selectedUnit: "",
+      foodDetails: {} as IFoodDetails,
+      isFetched: false
     }
   }
 
@@ -60,9 +66,9 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
     this.setState({ selectedUnit: selected.value })
   }
 
-  private fetchNutrientsDetails = () => {
-
-    fetch('https://api.edamam.com/api/food-database/nutrients?app_id=cd4cf0ad&app_key=63dd569834e24ed866292fc795fbdd31', {
+  private fetchNutrientsDetails = async() => {
+    
+    const data = await fetch('https://api.edamam.com/api/food-database/nutrients?app_id=cd4cf0ad&app_key=63dd569834e24ed866292fc795fbdd31', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -80,15 +86,25 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
       })
 
     }
-    ).then(res => res.json()).then(res => {
+    ).then(response => response.json());
+   // const json = await data.json()
+  console.log("this is data:", data)
+   this.transformIntoIFoodDetails(data as IFoodDetails);
+  }
+  private transformIntoIFoodDetails = (apiResponse: IFoodDetails) => {
 
-      console.log(res);
-      
-  })
+    let foodDetails: IFoodDetails;
+    //the spread operator just took away all the fun of manually transforming objects to interfaces..
+    foodDetails = {...apiResponse};
+
+    console.log("foodDetails",foodDetails);
+    this.setState({foodDetails: foodDetails, isFetched: true})
+
+
   }
   public render() {
     const { food } = this.props
-    const { amount, selectedUnit } = this.state
+    const { amount, selectedUnit, foodDetails, isFetched } = this.state
     const amountOptions = this.createAmountOptions();
     const unitOptions = this.createUnitOptions();
     return (
@@ -119,7 +135,21 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
                 placeholder='Select unit...'
                 onChange={this.handleUnitChange}
               />
-                <Button onClick={this.fetchNutrientsDetails} disabled={!(amount.trim() && selectedUnit.trim())}>Get Nutrition Detailes!</Button>
+                <Modal async await trigger={<Button onClick={ async() => await this.fetchNutrientsDetails} disabled={!(amount.trim() && selectedUnit.trim())}>Get Nutrition Detailes!</Button>}>
+    <Modal.Header>Nutrional Detail</Modal.Header>
+    <Modal.Content >
+      <Modal.Description>
+        <Header>Modal Header</Header>
+        {foodDetails? 
+        <FoodDetail foodDetails={foodDetails}></FoodDetail> : ""}
+      </Modal.Description>
+    </Modal.Content>
+    <Modal.Actions>
+      <Button primary>
+        Proceed <Icon name='car' />
+      </Button>
+    </Modal.Actions>
+  </Modal>
               </Grid.Row>
             </Grid.Column>
             <Grid.Column width={3}>

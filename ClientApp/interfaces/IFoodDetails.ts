@@ -1,5 +1,5 @@
 
-export interface Parsed {
+export interface IParsed {
     quantity: number;
     measure: string;
     food: string;
@@ -11,10 +11,11 @@ export interface Parsed {
     status: string;
 }
 
-export interface Ingredient {
-    parsed: Parsed[];
+export interface IIngredient {
+    parsed: IParsed[];
 }
-export interface TotalNutrients {
+export interface ITotalNutrients {
+    [key:string]: any;
     ENERC_KCAL: IUnitInfo;
     FAT: IUnitInfo;
     FASAT: IUnitInfo;
@@ -41,7 +42,8 @@ export interface TotalNutrients {
     VITD: IUnitInfo;
     TOCPHA: IUnitInfo;
 }
-export interface TotalDaily {
+export interface ITotalDaily {
+    [key:string]: any;
     ENERC_KCAL: IUnitInfo;
     FAT: IUnitInfo;
     FASAT: IUnitInfo;
@@ -82,7 +84,13 @@ export interface IFoodDetails {
     dietLabels: string[];
     healthLabels: string[];
     cautions: any[];
-    totalNutrients: TotalNutrients;
-    totalDaily: TotalDaily;
-    ingredients: Ingredient[];
+    totalNutrients: ITotalNutrients;
+    totalDaily: ITotalDaily;
+    ingredients: IIngredient[];
+}
+export interface IMergedIFoodForTable{
+    label?: string;
+    quantity?: number;
+    unit?:string;
+    rdi?:any;
 }

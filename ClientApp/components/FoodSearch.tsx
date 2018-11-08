@@ -34,6 +34,7 @@ export const FoodSearch = connect(class  extends React.Component<IFoodSearchProp
     }
     private transformIntoIFood = (apiResponse: any) => {
 
+        //yes, i know I could've just used a spread operator.. I learnt that later and this was fun.
         let foodArray: IFood[];
         let foodObject: IFood;
         let measuresArray: IMeasure[];

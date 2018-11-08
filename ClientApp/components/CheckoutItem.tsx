@@ -25,12 +25,6 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
 
         update<IRecipe[]>("basketRecipes", (basket: IRecipe[]) => {
             if (basket) {
-                // if (basket.indexOf(checkOutItem) > -1) {
-                //     let index = basket.indexOf(checkOutItem)
-                //     basket.splice(index, 1)
-                    
-                //     return basket;
-                // }
                return basket.filter((item) => checkOutItem !== item);
             }
             return [];

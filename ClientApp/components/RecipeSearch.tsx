@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { Segment, Input, Button, Dropdown, Grid, GridColumn,Icon,Label,Menu, MenuItem, Container } from 'semantic-ui-react';
-import {IRecipe, IIngredients, INutritionInfo} from '../interfaces/IRecipe';
-import {Recipe} from '../components/Recipe';
-import {  Router, Route, Link, Redirect} from "react-router-dom";
+import { Segment, Input, Button, Dropdown, Grid, GridColumn, Icon, Label, Menu, MenuItem, Container } from 'semantic-ui-react';
+import { IRecipe, IIngredients, INutritionInfo } from '../interfaces/IRecipe';
+import { Recipe } from '../components/Recipe';
+import { Router, Route, Link, Redirect } from "react-router-dom";
 import Store from "../interfaces/Store";
-import {connect, update} from 'react-imperator';
-import {Checkout} from './Checkout';
+import { connect, update } from 'react-imperator';
+import { Checkout } from './Checkout';
 
 export interface IRecipeSearchProps {
     recipes?: IRecipe[];
@@ -19,10 +19,10 @@ export interface IRecipeSearchState {
     diet: string;
     cookTime: number;
     healthOption: string;
-   // recipes: IRecipe[];
+    // recipes: IRecipe[];
 }
 
-export const RecipeSearch = connect(class  extends React.Component<IRecipeSearchProps, IRecipeSearchState> {
+export const RecipeSearch = connect(class extends React.Component<IRecipeSearchProps, IRecipeSearchState> {
     constructor(props: IRecipeSearchProps) {
         super(props);
 
@@ -33,21 +33,21 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
             diet: '',
             cookTime: 0,
             healthOption: '',
-           // recipes : []
+            // recipes : []
         }
     }
     //search/{query}/{startIndex}/{lastIndex}/{typeOfDiet}/{minCalories}/{maxCalories}/{health}/{maxCookTime}
     private fetchSelection = () => {
 
         fetch(`api/search/${this.state.query}/0/20/${this.state.diet}/${this.state.minCalorie}/${this.state.maxCalorie}/${this.state.healthOption}/${this.state.cookTime}`)
-        .then(res => res.json()).then(res => {
+            .then(res => res.json()).then(res => {
 
-            console.log(res);
-            this.transformIntoIRecipe(res);
-        })
+                console.log(res);
+                this.transformIntoIRecipe(res);
+            })
 
     }
-    private transformIntoIRecipe = (apiResponse : any) => {
+    private transformIntoIRecipe = (apiResponse: any) => {
 
         let recipeArray: IRecipe[];
         let recipeObject: IRecipe;
@@ -57,38 +57,38 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
         let digestObject: INutritionInfo;
 
         recipeArray = [];
-        apiResponse.hits.forEach((element :any) => {
+        apiResponse.hits.forEach((element: any) => {
             const x = element.recipe;
             digestArray = [];
             ingredientsArray = [];
             recipeObject = {} as IRecipe;
             ingredientsObject = {} as IIngredients;
             digestObject = {} as INutritionInfo;
-            x.ingredients.forEach((j: any)=> {                
-                 ingredientsObject = { text: j.text, weight: j.weight, foodCategory: j.foodCategory}
-                 ingredientsArray.push(ingredientsObject)
+            x.ingredients.forEach((j: any) => {
+                ingredientsObject = { text: j.text, weight: j.weight, foodCategory: j.foodCategory }
+                ingredientsArray.push(ingredientsObject)
             })
-            x.digest.forEach((k: any)=> {
-                digestObject = {label: k.label, total: k.total}
+            x.digest.forEach((k: any) => {
+                digestObject = { label: k.label, total: k.total }
                 digestArray.push(digestObject)
             })
-                recipeObject = { 
-                    label: x.label,
-                    calories: x.calories,
-                    image: x.image,
-                    source: x.source,
-                    totalWeight: x.totalWeight,
-                    healthLabels: x.healthLabels,
-                    url: x.url,
-                    ingredients: ingredientsArray,
-                    nutritionInfo: digestArray              
-                }
-            
+            recipeObject = {
+                label: x.label,
+                calories: x.calories,
+                image: x.image,
+                source: x.source,
+                totalWeight: x.totalWeight,
+                healthLabels: x.healthLabels,
+                url: x.url,
+                ingredients: ingredientsArray,
+                nutritionInfo: digestArray
+            }
+
             recipeArray.push(recipeObject);
         });
-        
-            update<IRecipe[]>("recipes", () => recipeArray)
-        
+
+        update<IRecipe[]>("recipes", () => recipeArray)
+
     }
     private onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.which != 13 || !(this.state.query.trim())) {
@@ -96,7 +96,7 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
         }
         this.fetchSelection()
     }
-    private onSearchButtonClick = () => { 
+    private onSearchButtonClick = () => {
         this.fetchSelection()
     }
     private onTextChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
@@ -119,8 +119,8 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
         this.setState({ healthOption: selected.value })
     }
     public render() {
-        const { query} = this.state
-        const {recipes, basketRecipes} = this.props
+        const { query } = this.state
+        const { recipes, basketRecipes } = this.props
 
         const minCalorieDropdownOptions = [
             { key: 100, text: '100', value: 100 },
@@ -197,84 +197,93 @@ export const RecipeSearch = connect(class  extends React.Component<IRecipeSearch
         return (
 
             <Segment>
-            <Grid columns={2} relaxed>
-            <GridColumn>
-                <Segment>
-                    <Input value={query} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="choose your main ingredient" />
-                    
-                    <Dropdown
-                        search
-                        searchInput={{ type: 'number' }}
-                        selection
-                        options={minCalorieDropdownOptions}
-                        placeholder='Select minimum calories...'
-                        onChange={this.handleMinCalorieChange}
-                    />
-                    <Dropdown
-                        search
-                        searchInput={{ type: 'number' }}
-                        selection
-                        options={maxCalorieDropdownOptions}
-                        placeholder='Select maximum calories...'
-                        onChange={this.handleMaxCalorieChange}
-                    />
-                    <Dropdown
-                        search
-                        searchInput={{ type: 'string' }}
-                        selection
-                        options={dietDropdownOptions}
-                        placeholder='Select your diet...'
-                        onChange={this.handleDietChange}
-                    />
-                    <Dropdown
-                        search
-                        searchInput={{ type: 'number' }}
-                        selection
-                        options={cookTimeDropdownOptions}
-                        placeholder='choose max Cook Time'
-                        onChange={this.handleCookTimeChange}
-                    />
-                    <Dropdown
-                    search
-                    searchInput={{ type: 'string' }}
-                    selection
-                    options={healthDropdownOptions}
-                    placeholder='choose your health option'
-                    onChange={this.handleHealthOptionChange}
-                />
-                <Link to="/FoodSearch">Go to Food Analyzer</Link>
-                <Link to="/Checkout">Go to Checkout</Link>
-                <Menu compact>
-                <Menu.Item as='a' onClick={() => location.href="#/Checkout"}>
-                <Icon name="cart arrow down" size="large"></Icon>
-                
-                {basketRecipes &&
-                    <Label color='red' floating> {basketRecipes.length}</Label>}
-              
-                </Menu.Item>
-                </Menu>
+                <Grid >
+                    <GridColumn>
+                        <Segment>
+                            <Grid columns={2} celled>
+                                <GridColumn >
+                                    <Input value={query} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="choose your main ingredient" />
 
-                </Segment>
-                <Button onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
-                </GridColumn>
+                                    <Dropdown
+                                        search
+                                        searchInput={{ type: 'number' }}
+                                        selection
+                                        options={minCalorieDropdownOptions}
+                                        placeholder='Select minimum calories...'
+                                        onChange={this.handleMinCalorieChange}
+                                    />
+                                    <Dropdown
+                                        search
+                                        searchInput={{ type: 'number' }}
+                                        selection
+                                        options={maxCalorieDropdownOptions}
+                                        placeholder='Select maximum calories...'
+                                        onChange={this.handleMaxCalorieChange}
+                                    />
+                                    <Dropdown
+                                        search
+                                        searchInput={{ type: 'string' }}
+                                        selection
+                                        options={dietDropdownOptions}
+                                        placeholder='Select your diet...'
+                                        onChange={this.handleDietChange}
+                                    />
+                                    <Dropdown
+                                        search
+                                        searchInput={{ type: 'number' }}
+                                        selection
+                                        options={cookTimeDropdownOptions}
+                                        placeholder='choose max Cook Time'
+                                        onChange={this.handleCookTimeChange}
+                                    />
+                                    <Dropdown
+                                        search
+                                        searchInput={{ type: 'string' }}
+                                        selection
+                                        options={healthDropdownOptions}
+                                        placeholder='choose your health option'
+                                        onChange={this.handleHealthOptionChange}
+                                    />
+                                    <Button onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
+                                </GridColumn>
+
+                                <GridColumn >
+                                    <Menu compact>
+                                        <Menu.Item as="a"           
+                                        onClick={ () => location.href = "#/FoodSearch"}>
+                                        Food Analyzer
+                                        </Menu.Item>
+                                        <Menu.Item as='a' onClick={() => location.href = "#/Checkout"}>
+                                            <Icon name="cart arrow down" size="big"></Icon>
+
+                                            {basketRecipes &&
+                                                <Label color='red' floating> {basketRecipes.length}</Label>}
+
+                                        </Menu.Item>
+                                    </Menu>
+                                </GridColumn>
+                            </Grid>
+                        </Segment>
+
+                    </GridColumn>
                 </Grid>
                 <React.Fragment>
-                <Grid columns="4">
-                <Grid.Row>
-                {recipes &&
-                    
-                    recipes.map((x: IRecipe, index: number) => {
-                        return <Segment size="small"key={index}>
-                         <GridColumn>
-                        <Recipe recipe = {x}/>
-                        </GridColumn>
-                        </Segment>
-                        
-                    })}
-                    </Grid.Row>
+                    <Grid columns="4">
+                        <Grid.Row>
+                            {recipes &&
+
+                                recipes.map((x: IRecipe, index: number) => {
+                                    return <Segment size="small" key={index}>
+                                        <GridColumn>
+                                            <Recipe recipe={x} />
+                                        </GridColumn>
+                                    </Segment>
+
+                                })}
+                        </Grid.Row>
                     </Grid>
-                    </React.Fragment>
-                    </Segment>
+                </React.Fragment>
+            </Segment>
         );
     }
-},["recipes","basketRecipes"])
+}, ["recipes", "basketRecipes"])
