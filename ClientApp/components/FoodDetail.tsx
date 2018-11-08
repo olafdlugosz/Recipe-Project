@@ -33,6 +33,7 @@ private formatNutritionInfoTotal = (total: number) => {
       const {foodDetails} = this.props;
     return (
       <div>
+
       {foodDetails?  
       <Grid celled columns={2}>
       <GridColumn>

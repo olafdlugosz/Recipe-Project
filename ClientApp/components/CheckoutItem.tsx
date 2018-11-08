@@ -20,12 +20,11 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
 
     private removeFromBasket = () => {
 
-        
         const checkOutItem = this.props.checkoutItem;
 
         update<IRecipe[]>("basketRecipes", (basket: IRecipe[]) => {
             if (basket) {
-               return basket.filter((item) => checkOutItem !== item);
+                return basket.filter((item) => checkOutItem !== item);
             }
             return [];
         })
@@ -33,19 +32,19 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
 
 
 
-  public render() {
-    const { checkoutItem } = this.props
-    return (
-        <div>
-            <Segment>
+    public render() {
+        const { checkoutItem } = this.props
+        return (
+            <div>
+                <Segment>
 
-                <Header as="h3">{checkoutItem.label}</Header>
-                <Image size="small" label={checkoutItem.source} src={checkoutItem.image}></Image>
-                <div>
-                    Remove Recipe <Icon name="minus circle" onClick={this.removeFromBasket}></Icon>
-                </div>
-            </Segment>
-        </div>
-    );
-}
+                    <Header as="h3">{checkoutItem.label}</Header>
+                    <Image size="small" label={checkoutItem.source} src={checkoutItem.image}></Image>
+                    <div>
+                        Remove Recipe <Icon name="minus circle" onClick={this.removeFromBasket}></Icon>
+                    </div>
+                </Segment>
+            </div>
+        );
+    }
 }

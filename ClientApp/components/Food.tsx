@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IFood, IMeasure } from 'ClientApp/interfaces/IFood';
-import { Segment, Header, Label, Dropdown, Button, List, ListItem, Grid, GridColumn, GridRow, ItemContent, Icon, Image, Modal  } from 'semantic-ui-react';
+import { Segment,ModalProps, Header, Label, Dropdown, Button, List, ListItem, Grid, GridColumn, GridRow, ItemContent, Icon, Image, Modal } from 'semantic-ui-react';
 import { IFoodDetails, IUnitInfo, ITotalDaily, ITotalNutrients, IIngredient, IParsed } from 'ClientApp/interfaces/IFoodDetails';
 import { FoodDetail } from './FoodDetail';
 
@@ -51,13 +51,13 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
     this.setState({ amount: selected.value })
   }
   private createUnitOptions = () => {
-    
+
     let unitOptions: any[];
     unitOptions = [];
-    let unitObject: { key: string, text: string, value: string}
-    
-    this.props.food.measures.forEach((item : any) => {
-      unitObject = {key: item.label, text: item.label, value: item.uri}
+    let unitObject: { key: string, text: string, value: string }
+
+    this.props.food.measures.forEach((item: any) => {
+      unitObject = { key: item.label, text: item.label, value: item.uri }
       unitOptions.push(unitObject)
     })
     return unitOptions;
@@ -66,8 +66,8 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
     this.setState({ selectedUnit: selected.value })
   }
 
-  private fetchNutrientsDetails = async() => {
-    
+  private fetchNutrientsDetails = async () => {
+
     const data = await fetch('https://api.edamam.com/api/food-database/nutrients?app_id=cd4cf0ad&app_key=63dd569834e24ed866292fc795fbdd31', {
       method: 'POST',
       headers: {
@@ -87,21 +87,24 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
 
     }
     ).then(response => response.json());
-   // const json = await data.json()
-  console.log("this is data:", data)
-   this.transformIntoIFoodDetails(data as IFoodDetails);
+    // const json = await data.json()
+    console.log("this is data:", data)
+    this.transformIntoIFoodDetails(data as IFoodDetails);
   }
   private transformIntoIFoodDetails = (apiResponse: IFoodDetails) => {
 
     let foodDetails: IFoodDetails;
     //the spread operator just took away all the fun of manually transforming objects to interfaces..
-    foodDetails = {...apiResponse};
+    foodDetails = { ...apiResponse };
 
-    console.log("foodDetails",foodDetails);
-    this.setState({foodDetails: foodDetails, isFetched: true})
-
-
+    console.log("foodDetails", foodDetails);
+    this.setState({ foodDetails: foodDetails, isFetched: true })
+    
+    const node = this.myRef.current
+   
+    
   }
+  private myRef = React.createRef<React.Component<ModalProps, any, any>> ()
   public render() {
     const { food } = this.props
     const { amount, selectedUnit, foodDetails, isFetched } = this.state
@@ -128,28 +131,35 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
                   onChange={this.handleAmountChange}
                 />
                 <Dropdown
-                search
-                searchInput={{ type: 'string' }}
-                selection
-                options={unitOptions}
-                placeholder='Select unit...'
-                onChange={this.handleUnitChange}
-              />
-                <Modal async await trigger={<Button onClick={ async() => await this.fetchNutrientsDetails} disabled={!(amount.trim() && selectedUnit.trim())}>Get Nutrition Detailes!</Button>}>
-    <Modal.Header>Nutrional Detail</Modal.Header>
-    <Modal.Content >
-      <Modal.Description>
-        <Header>Modal Header</Header>
-        {foodDetails? 
-        <FoodDetail foodDetails={foodDetails}></FoodDetail> : ""}
-      </Modal.Description>
-    </Modal.Content>
-    <Modal.Actions>
-      <Button primary>
-        Proceed <Icon name='car' />
-      </Button>
-    </Modal.Actions>
-  </Modal>
+                  search
+                  searchInput={{ type: 'string' }}
+                  selection
+                  options={unitOptions}
+                  placeholder='Select unit...'
+                  onChange={this.handleUnitChange}
+                />
+
+                <Button onClick={this.fetchNutrientsDetails} disabled={!(amount.trim() && selectedUnit.trim())}>Get Nutrition Detailes!</Button>
+                <Modal open={isFetched}>
+                  <Modal.Header>Nutrional Detail</Modal.Header>
+                  <Modal.Content >
+                    <Modal.Description>
+                      <Header>{isFetched? foodDetails.ingredients[0].parsed[0].food : ""}</Header>
+                      <Header>{isFetched? foodDetails.totalWeight + "g" : ""}</Header>
+                      
+                      {foodDetails ?
+                        <FoodDetail foodDetails={foodDetails}></FoodDetail> : ""}
+                    </Modal.Description>
+                  </Modal.Content>
+                  <Modal.Actions >
+                    <Button primary>
+                      Proceed <Icon name='car' />
+                    </Button>
+                    <Button secondary onClick={ () => this.setState({isFetched: false})}>
+                    Close 
+                  </Button>
+                  </Modal.Actions>
+                </Modal>
               </Grid.Row>
             </Grid.Column>
             <Grid.Column width={3}>
