@@ -4,6 +4,7 @@ import { Segment,ModalProps, Header, Label, Dropdown, Button, List, ListItem, Gr
 import { IFoodDetails, IUnitInfo, ITotalDaily, ITotalNutrients, IIngredient, IParsed } from 'ClientApp/interfaces/IFoodDetails';
 import { FoodDetail } from './FoodDetail';
 
+
 export interface IFoodProps {
   food: IFood;
 }
@@ -13,6 +14,8 @@ export interface IFoodState {
   selectedUnit: string;
   foodDetails: IFoodDetails;
   isFetched: boolean;
+  amountOptions: any[];
+  unitOptions: any[];
 }
 
 export class Food extends React.Component<IFoodProps, IFoodState> {
@@ -23,10 +26,32 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
       amount: "",
       selectedUnit: "",
       foodDetails: {} as IFoodDetails,
-      isFetched: false
+      isFetched: false,
+      amountOptions: [],
+      unitOptions: [],
     }
   }
+componentDidMount = () => {
+  this.createAmountOptions();
+  this.createUnitOptions();
 
+}
+//Take away this function and see a drastic performance drop in the input of FoodSearch component
+//I cannot seem to locate the bottleneck, but chrome will throw timeout, reflow [Violation] 
+//If one wants to type in the input after data has been fetched. Any help in locating the bottleneck
+//will be appreciated...This issue presists after trying different dropdown menus, taking away maps etc
+//What is going on??
+shouldComponentUpdate(nextProps: IFoodProps, nextState: IFoodState) {
+  let currPropsStr = JSON.stringify(this.props);
+  let nextPropsStr = JSON.stringify(nextProps);
+  let currStateStr = JSON.stringify(this.state);
+  let nextStateStr = JSON.stringify(nextState);
+  if (currPropsStr === nextPropsStr && currStateStr === nextStateStr) {
+    return false;
+  } else {
+    return true;
+  }
+}
   private formatNutrientsTotal = (total: number) => {
     let tot = total.toString();
     if (tot.indexOf(".") > -1) {
@@ -45,7 +70,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
       amountObject = { key: index.toString(), text: index.toString(), value: index.toString() }
       amountOptionsArray.push(amountObject);
     }
-    return amountOptionsArray;
+    this.setState({amountOptions: amountOptionsArray});
   }
   private handleAmountChange = (e: React.SyntheticEvent<HTMLElement>, selected: any) => {
     this.setState({ amount: selected.value })
@@ -60,7 +85,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
       unitObject = { key: item.label, text: item.label, value: item.uri }
       unitOptions.push(unitObject)
     })
-    return unitOptions;
+    this.setState({unitOptions: unitOptions})
   }
   private handleUnitChange = (e: React.SyntheticEvent<HTMLElement>, selected: any) => {
     this.setState({ selectedUnit: selected.value })
@@ -99,28 +124,19 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
 
     console.log("foodDetails", foodDetails);
     this.setState({ foodDetails: foodDetails, isFetched: true })
-    
-    const node = this.myRef.current
-   
-    
+           
   }
-  private myRef = React.createRef<React.Component<ModalProps, any, any>> ()
   public render() {
     const { food } = this.props
-    const { amount, selectedUnit, foodDetails, isFetched } = this.state
-    const amountOptions = this.createAmountOptions();
-    const unitOptions = this.createUnitOptions();
+    const { amount, selectedUnit, foodDetails, isFetched, amountOptions, unitOptions } = this.state
+    
     return (
       <Segment>
         <Grid celled>
           <Grid.Row>
             <Grid.Column width={13}>
-              <Header as="h3">{Object.prototype.hasOwnProperty.call(food, "brand") ? <span>{food.brand}</span> : ""} {food.label} </Header>
-              <Label>{food.categoryLabel}</Label>
-              <Label>{food.category}</Label>
-              {Object.prototype.hasOwnProperty.call(food, "foodContentsLabel") ?
-                <p>{food.foodContentsLabel}</p>
-                : ""}
+         <Header as="h3">{food.brand}{food.label}</Header>
+         <p>{food.foodContentsLabel}</p>
               <Grid.Row>
                 <Dropdown
                   search
