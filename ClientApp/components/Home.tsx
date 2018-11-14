@@ -22,15 +22,16 @@ export class Home extends React.Component<IHomeProps, IHomeState> {
 
   public render() {
     return (
-      <Container>
+      <div>
+      
       <Switch>
   <Route exact path='/' component={RecipeSearch}/>
   <Route path='/Checkout' component={Checkout}/>
   <Route path='/RecipeDetail' component={RecipeDetail}/>
   <Route path='/FoodSearch' component={FoodSearch}/>
 </Switch>
-        
-      </Container>
+
+      </div>
     );
   }
 }

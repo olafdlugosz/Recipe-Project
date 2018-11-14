@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Segment, Input, Button, Dropdown, Grid, GridColumn, Icon, Label, Menu, MenuItem, Container } from 'semantic-ui-react';
+import { Segment, Input, Button, Dropdown, Grid, GridColumn, Divider, Icon, Label, Menu, MenuItem, Container, Header } from 'semantic-ui-react';
 import { IRecipe, IIngredients, INutritionInfo } from '../interfaces/IRecipe';
 import { Recipe } from '../components/Recipe';
 import { Router, Route, Link, Redirect } from "react-router-dom";
@@ -194,14 +194,44 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
             { key: 'Vegetarian', text: 'Vegetarian', value: 'vegetarian' },
             { key: 'Wheat-free', text: 'Wheat-free', value: 'wheat-free' },
         ]
+    //     <Menu compact>
+    //     <Menu.Item as="a"           
+    //     onClick={ () => location.href = "#/FoodSearch"}>
+    //     Food Analyzer
+    //     </Menu.Item>
+    //     <Menu.Item as='a' onClick={() => location.href = "#/Checkout"}>
+    //         <Icon name="cart arrow down" size="big"></Icon>
+
+    //         {basketRecipes &&
+    //             <Label color='red' floating> {basketRecipes.length}</Label>}
+
+    //     </Menu.Item>
+    // </Menu>style={{ marginTop: '3em' }}
+
         return (
 
-            <Segment>
-                <Grid >
-                    <GridColumn>
-                        <Segment>
+            <React.Fragment>
+            <Menu fixed="top" inverted>
+            
+            <Menu.Item as="a"  position="left"        
+            onClick={ () => location.href = "#/FoodSearch"}>
+            Food Analyzer
+            </Menu.Item>
+            <Header as ="h4" color="olive"> Here you can search for your favorite recipies!</Header>
+            <Menu.Item as='a' position="right" style={{ marginTop:'1em', marginLeft: '3em'}} onClick={() => location.href = "#/Checkout"}>
+                <Icon name="cart arrow down" size="big"></Icon>
+    
+                {basketRecipes &&
+                    <Label color='red' floating> {basketRecipes.length}</Label>}
+    
+            </Menu.Item>
+            
+            </Menu>
+                <Grid style={{marginTop: '3em'}}>
+                    <GridColumn >
+                        
                             <Grid columns={2} celled>
-                                <GridColumn >
+                                <GridColumn width="2" >
                                     <Input value={query} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="choose your main ingredient" />
 
                                     <Dropdown
@@ -244,46 +274,35 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                         placeholder='choose your health option'
                                         onChange={this.handleHealthOptionChange}
                                     />
-                                    <Button onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
+                                    <Button style={{marginTop: '5px'}}onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
                                 </GridColumn>
+                               
+                                <GridColumn width={14}>
 
-                                <GridColumn >
-                                    <Menu compact>
-                                        <Menu.Item as="a"           
-                                        onClick={ () => location.href = "#/FoodSearch"}>
-                                        Food Analyzer
-                                        </Menu.Item>
-                                        <Menu.Item as='a' onClick={() => location.href = "#/Checkout"}>
-                                            <Icon name="cart arrow down" size="big"></Icon>
-
-                                            {basketRecipes &&
-                                                <Label color='red' floating> {basketRecipes.length}</Label>}
-
-                                        </Menu.Item>
-                                    </Menu>
+                                    <React.Fragment>
+                                    <Grid columns="4">
+                                        <Grid.Row>
+                                            {recipes &&
+                
+                                                recipes.map((x: IRecipe, index: number) => {
+                                                    return <Segment size="small" key={index}>
+                                                        <GridColumn>
+                                                            <Recipe recipe={x} />
+                                                        </GridColumn>
+                                                    </Segment>
+                
+                                                })}
+                                        </Grid.Row>
+                                    </Grid>
+                                </React.Fragment>
                                 </GridColumn>
                             </Grid>
-                        </Segment>
+                        
 
                     </GridColumn>
                 </Grid>
-                <React.Fragment>
-                    <Grid columns="4">
-                        <Grid.Row>
-                            {recipes &&
-
-                                recipes.map((x: IRecipe, index: number) => {
-                                    return <Segment size="small" key={index}>
-                                        <GridColumn>
-                                            <Recipe recipe={x} />
-                                        </GridColumn>
-                                    </Segment>
-
-                                })}
-                        </Grid.Row>
-                    </Grid>
-                </React.Fragment>
-            </Segment>
+ 
+            </React.Fragment>
         );
     }
 }, ["recipes", "basketRecipes"])

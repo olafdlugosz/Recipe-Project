@@ -1,20 +1,20 @@
 import * as React from 'react';
 import { IRecipe, IIngredients, INutritionInfo } from 'ClientApp/interfaces/IRecipe';
 import Store from "../interfaces/Store";
-import { Container, Segment,TableRow, Icon, Image, Grid, Header, List, Table, TableBody, TableCell, TableFooter, TableHeader, TableHeaderCell } from 'semantic-ui-react';
+import { Container, Segment,TableRow,Menu, Label, Icon, Image, Grid, Header, List, Table, TableBody, TableCell, TableFooter, TableHeader, TableHeaderCell, GridColumn, GridRow } from 'semantic-ui-react';
 import { Router, Route, Link, Redirect } from "react-router-dom";
 import { RecipeSearch } from './RecipeSearch';
 import {update, connect} from "react-imperator";
 
 
 export interface IRecipeDetailProps {
-  //recipe: IRecipe
+  basketRecipes?: IRecipe[];
 }
 
 export interface IRecipeDetailState {
 }
 
-export class RecipeDetail extends React.Component<IRecipeDetailProps, IRecipeDetailState> {
+export const RecipeDetail = connect(class extends React.Component<IRecipeDetailProps, IRecipeDetailState> {
   constructor(props: IRecipeDetailProps) {
     super(props);
 
@@ -52,9 +52,42 @@ export class RecipeDetail extends React.Component<IRecipeDetailProps, IRecipeDet
 
   public render() {
     const recipe = Store.selectedRecipe
+    const {basketRecipes} = this.props;
     console.log(recipe)
     return (
-      <Container>
+      <React.Fragment>
+      <Grid columns={3}>
+      <Menu fixed="top" inverted>
+      <GridColumn width={3}>
+      
+      
+      <Menu.Item as="a"  position="left" style={{ marginTop:'1em', marginLeft: '3em'}}       
+      onClick={ () => location.href = "#/"}>
+      RecipeSearch
+      </Menu.Item>
+      </GridColumn>
+      <GridColumn width={3}>
+      <Menu.Item as="a" style={{ marginTop:'1em', marginLeft: '3em'}}      
+      onClick={ () => location.href = "/FoodSearch"}>
+      Food Analyzer
+      </Menu.Item>
+      
+      </GridColumn>
+     
+     
+      <Menu.Item as='a' position="right" style={{ marginTop:'1em', marginLeft: '3em'}} onClick={() => location.href = "#/Checkout"}>
+          <Icon name="cart arrow down" size="big"></Icon>
+
+          {basketRecipes &&
+              <Label color='red' floating> {basketRecipes.length}</Label>}
+
+      </Menu.Item>
+      
+      </Menu>
+      
+      </Grid>
+      <div>
+      <Container style={{marginTop: '6em'}}>
         <Segment>
           <Grid celled>
             <Grid.Row>
@@ -78,7 +111,6 @@ export class RecipeDetail extends React.Component<IRecipeDetailProps, IRecipeDet
                   })}
                 </List>
                 <a href={recipe.url}>Go to Cooking Instructions</a>
-                <Link to="/Checkout">Go to Checkout</Link>
               </Grid.Column>
               <div>
               <span>     Add To Basket</span>
@@ -111,6 +143,8 @@ export class RecipeDetail extends React.Component<IRecipeDetailProps, IRecipeDet
         </Table>
         </Segment>
       </Container>
+      </div>
+      </React.Fragment>
     );
   }
-}
+}, ["basketRecipes"])

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IFood, IMeasure } from 'ClientApp/interfaces/IFood';
-import { Segment,ModalProps, Header, Label, Dropdown, Button, List, ListItem, Grid, GridColumn, GridRow, ItemContent, Icon, Image, Modal } from 'semantic-ui-react';
+import { Segment, ModalProps, Header, Label, Dropdown, Button, List, ListItem, Grid, GridColumn, GridRow, ItemContent, Icon, Image, Modal } from 'semantic-ui-react';
 import { IFoodDetails, IUnitInfo, ITotalDaily, ITotalNutrients, IIngredient, IParsed } from 'ClientApp/interfaces/IFoodDetails';
 import { FoodDetail } from './FoodDetail';
 
@@ -31,27 +31,27 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
       unitOptions: [],
     }
   }
-componentDidMount = () => {
-  this.createAmountOptions();
-  this.createUnitOptions();
+  componentDidMount = () => {
+    this.createAmountOptions();
+    this.createUnitOptions();
 
-}
-//Take away this function and see a drastic performance drop in the input of FoodSearch component
-//I cannot seem to locate the bottleneck, but chrome will throw timeout, reflow [Violation] 
-//If one wants to type in the input after data has been fetched. Any help in locating the bottleneck
-//will be appreciated...This issue presists after trying different dropdown menus, taking away maps etc
-//What is going on??
-shouldComponentUpdate(nextProps: IFoodProps, nextState: IFoodState) {
-  let currPropsStr = JSON.stringify(this.props);
-  let nextPropsStr = JSON.stringify(nextProps);
-  let currStateStr = JSON.stringify(this.state);
-  let nextStateStr = JSON.stringify(nextState);
-  if (currPropsStr === nextPropsStr && currStateStr === nextStateStr) {
-    return false;
-  } else {
-    return true;
   }
-}
+  //Take away this function and see a drastic performance drop in the input of FoodSearch component
+  //I cannot seem to locate the bottleneck, but chrome will throw timeout, reflow [Violation] 
+  //If one wants to type in the input after data has been fetched. Any help in locating the bottleneck
+  //will be appreciated...This issue presists after trying different dropdown menus, taking away maps etc
+  //What is going on??
+  shouldComponentUpdate(nextProps: IFoodProps, nextState: IFoodState) {
+    let currPropsStr = JSON.stringify(this.props);
+    let nextPropsStr = JSON.stringify(nextProps);
+    let currStateStr = JSON.stringify(this.state);
+    let nextStateStr = JSON.stringify(nextState);
+    if (currPropsStr === nextPropsStr && currStateStr === nextStateStr) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   private formatNutrientsTotal = (total: number) => {
     let tot = total.toString();
     if (tot.indexOf(".") > -1) {
@@ -70,7 +70,7 @@ shouldComponentUpdate(nextProps: IFoodProps, nextState: IFoodState) {
       amountObject = { key: index.toString(), text: index.toString(), value: index.toString() }
       amountOptionsArray.push(amountObject);
     }
-    this.setState({amountOptions: amountOptionsArray});
+    this.setState({ amountOptions: amountOptionsArray });
   }
   private handleAmountChange = (e: React.SyntheticEvent<HTMLElement>, selected: any) => {
     this.setState({ amount: selected.value })
@@ -85,7 +85,7 @@ shouldComponentUpdate(nextProps: IFoodProps, nextState: IFoodState) {
       unitObject = { key: item.label, text: item.label, value: item.uri }
       unitOptions.push(unitObject)
     })
-    this.setState({unitOptions: unitOptions})
+    this.setState({ unitOptions: unitOptions })
   }
   private handleUnitChange = (e: React.SyntheticEvent<HTMLElement>, selected: any) => {
     this.setState({ selectedUnit: selected.value })
@@ -124,19 +124,19 @@ shouldComponentUpdate(nextProps: IFoodProps, nextState: IFoodState) {
 
     console.log("foodDetails", foodDetails);
     this.setState({ foodDetails: foodDetails, isFetched: true })
-           
+
   }
   public render() {
     const { food } = this.props
     const { amount, selectedUnit, foodDetails, isFetched, amountOptions, unitOptions } = this.state
-    
+
     return (
       <Segment>
         <Grid celled>
           <Grid.Row>
             <Grid.Column width={13}>
-         <Header as="h3">{food.brand}{food.label}</Header>
-         <p>{food.foodContentsLabel}</p>
+              <Header as="h3">{food.brand}{food.label}</Header>
+              <p>{food.foodContentsLabel}</p>
               <Grid.Row>
                 <Dropdown
                   search
@@ -160,19 +160,19 @@ shouldComponentUpdate(nextProps: IFoodProps, nextState: IFoodState) {
                   <Modal.Header>Nutrional Detail</Modal.Header>
                   <Modal.Content >
                     <Modal.Description>
-                      <Header>{isFetched? foodDetails.ingredients[0].parsed[0].food : ""}</Header>
-                      <Header>{isFetched? foodDetails.totalWeight + "g" : ""}</Header>
-                      
-                      {foodDetails ?
-                        <FoodDetail foodDetails={foodDetails}></FoodDetail> : ""}
+                      <Header>{isFetched && foodDetails.ingredients[0].parsed[0].food }</Header>
+                      <Header>{isFetched && foodDetails.totalWeight + "g" }</Header>
+
+                      {foodDetails &&
+                        <FoodDetail foodDetails={foodDetails}></FoodDetail>}
                     </Modal.Description>
                   </Modal.Content>
                   <Modal.Actions >
                     <Button primary>
                       Proceed <Icon name='car' />
                     </Button>
-                    <Button secondary onClick={ () => this.setState({isFetched: false})}>
-                    Close 
+                    <Button secondary onClick={() => this.setState({ isFetched: false })}>
+                      Close
                   </Button>
                   </Modal.Actions>
                 </Modal>

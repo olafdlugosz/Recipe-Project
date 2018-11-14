@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Segment, Input, Button, Dropdown, Grid, GridColumn, Container, List, ListItem } from 'semantic-ui-react';
+import { Segment, Input, Button, Dropdown,Menu, Label,Icon, Grid, GridColumn, Container, List, ListItem } from 'semantic-ui-react';
 import { IFood, IMeasure } from '../interfaces/IFood';
 import { Food } from './Food';
 import { connect, update } from 'react-imperator';
@@ -85,10 +85,31 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
         const { query } = this.state;
         const { foods } = this.props;
         return (
+            <React.Fragment>
+     
+      <Menu fixed="top" inverted>
+    
+      
+      
+      <Menu.Item as="a"  position="left" style={{ marginTop:'1em', marginLeft: '3em'}}       
+      onClick={ () => location.href = "#/"}>
+      RecipeSearch
+      </Menu.Item>
+
+
+      
+     
+     
+     
+
+      
+      </Menu>
+      
+      
             <div>
-                <Segment>
+                <Segment style={{marginTop: '6em'}}>
                     <Input value={query} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="search for any food" />
-                    <Link to="/">Go to Recipe Search</Link>
+                 
                 </Segment>
                 <React.Fragment>
                     {foods &&
@@ -100,6 +121,7 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
                     }
                 </React.Fragment>
             </div>
+            </React.Fragment>
         );
     }
 }, ["foods"])
