@@ -16,6 +16,7 @@ export interface IFoodState {
   isFetched: boolean;
   amountOptions: any[];
   unitOptions: any[];
+  isLoading: boolean;
 }
 
 export class Food extends React.Component<IFoodProps, IFoodState> {
@@ -29,6 +30,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
       isFetched: false,
       amountOptions: [],
       unitOptions: [],
+      isLoading: false
     }
   }
   componentDidMount = () => {
@@ -97,7 +99,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
   }
 
   private fetchNutrientsDetails = async () => {
-
+    this.setState({isLoading: true})
     const data = await fetch('https://api.edamam.com/api/food-database/nutrients?app_id=cd4cf0ad&app_key=63dd569834e24ed866292fc795fbdd31', {
       method: 'POST',
       headers: {
@@ -128,12 +130,12 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
     foodDetails = { ...apiResponse };
 
     console.log("foodDetails", foodDetails);
-    this.setState({ foodDetails: foodDetails, isFetched: true })
+    this.setState({ foodDetails: foodDetails, isFetched: true, isLoading: false })
 
   }
   public render() {
     const { food } = this.props
-    const { amount, selectedUnit, foodDetails, isFetched, amountOptions, unitOptions } = this.state
+    const { amount, selectedUnit, foodDetails, isFetched, amountOptions, unitOptions, isLoading } = this.state
 
     return (
       <Segment>
@@ -151,6 +153,8 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
                   placeholder='Select amount...'
                   onChange={this.handleAmountChange}
                   clearable
+                  loading={isLoading}
+                  
                 />
                 <Dropdown
                   search
@@ -160,6 +164,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
                   placeholder='Select unit...'
                   onChange={this.handleUnitChange}
                   clearable
+                  loading={isLoading}
                 />
 
                 <Button onClick={this.fetchNutrientsDetails} disabled={!(amount.trim() && selectedUnit.trim())}>Get Nutrition Detailes!</Button>
@@ -175,9 +180,6 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
                     </Modal.Description>
                   </Modal.Content>
                   <Modal.Actions >
-                    <Button primary>
-                      Proceed <Icon name='car' />
-                    </Button>
                     <Button secondary onClick={() => this.setState({ isFetched: false })}>
                       Close
                   </Button>

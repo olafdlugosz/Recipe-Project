@@ -8,6 +8,7 @@ export interface IRecipe {
     nutritionInfo: INutritionInfo[];
     healthLabels: string[];
     url: string;
+    isAdded?: boolean;
 
 }
 export interface IIngredients {

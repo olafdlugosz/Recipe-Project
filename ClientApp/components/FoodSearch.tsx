@@ -1,12 +1,14 @@
 import * as React from 'react';
-import { Segment, Input, Button, Dropdown,Menu, Label,Icon, Grid, GridColumn, Container, List, ListItem } from 'semantic-ui-react';
+import { Segment, Input,Header, Button, Dropdown,Menu, Label,Icon, Grid, GridColumn, Container, List, ListItem } from 'semantic-ui-react';
 import { IFood, IMeasure } from '../interfaces/IFood';
 import { Food } from './Food';
 import { connect, update } from 'react-imperator';
 import { Router, Route, Link, Redirect } from "react-router-dom";
+import { IRecipe } from 'ClientApp/interfaces/IRecipe';
 
 export interface IFoodSearchProps {
     foods?: IFood[];
+    basketRecipes?: IRecipe[];
 }
 
 export interface IFoodSearchState {
@@ -73,6 +75,7 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
     }
     private onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.which == 13 && this.state.query.length > 0) {
+
             this.fetchSelection()
         }
     }
@@ -83,16 +86,24 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
 
     public render() {
         const { query } = this.state;
-        const { foods } = this.props;
+        const { foods, basketRecipes } = this.props;
         return (
             <React.Fragment>
      
-      <Menu fixed="top" inverted>
-  
-      <Menu.Item as="a"  position="left" style={{ marginTop:'1em', marginLeft: '3em'}}       
-      onClick={ () => location.href = "#/"}>
-      RecipeSearch
-      </Menu.Item>
+            <Menu fixed="top" inverted>
+            
+            <Menu.Item as="a"  position="left"        
+            onClick={ () => location.href = "#/"}>
+            Recipe Search
+            </Menu.Item>
+            <Header as ="h4" color="olive"> Here you can find nutritional information for your favorite foods!</Header>
+            <Menu.Item as='a' position="right" style={{ marginTop:'1em', marginLeft: '3em'}} onClick={() => location.href = "#/Checkout"}>
+                <Icon name="cart arrow down" size="big"></Icon>
+    
+                {basketRecipes &&
+                    <Label color='red' floating> {basketRecipes.length}</Label>}
+    
+            </Menu.Item>
     
       </Menu>
       
@@ -115,4 +126,4 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
             </React.Fragment>
         );
     }
-}, ["foods"])
+}, ["foods", "basketRecipes"])

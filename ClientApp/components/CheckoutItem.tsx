@@ -2,6 +2,7 @@ import * as React from 'react';
 import { IRecipe } from 'ClientApp/interfaces/IRecipe';
 import { Segment, Icon, Image, Header,Button, Grid, GridColumn, List, ListItem } from 'semantic-ui-react';
 import { connect, update } from 'react-imperator';
+import { RecipeSearch } from '../components/RecipeSearch';
 
 export interface ICheckoutItemProps {
     checkoutItem: IRecipe
@@ -24,6 +25,7 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
 
         update<IRecipe[]>("basketRecipes", (basket: IRecipe[]) => {
             if (basket) {
+                checkOutItem.isAdded = false;
                 return basket.filter((item) => checkOutItem !== item);
             }
             return [];

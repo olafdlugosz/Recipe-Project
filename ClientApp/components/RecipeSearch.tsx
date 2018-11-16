@@ -57,7 +57,6 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
         if(this.state.diet.length > 0){parameters += `&diet=${this.state.diet}`}
         if(this.state.cookTime > 0){parameters += `&time=${this.state.cookTime}`}
         if(this.state.healthOption.length > 0){parameters +=`&health=${this.state.healthOption}` } 
-        console.log(parameters);
         return parameters;
     }
     private transformIntoIRecipe = (apiResponse: any) => {
@@ -94,7 +93,8 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                 healthLabels: x.healthLabels,
                 url: x.url,
                 ingredients: ingredientsArray,
-                nutritionInfo: digestArray
+                nutritionInfo: digestArray,
+                isAdded: false
             }
 
             recipeArray.push(recipeObject);

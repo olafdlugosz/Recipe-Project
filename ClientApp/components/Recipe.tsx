@@ -13,6 +13,7 @@ export interface IRecipeProps {
 }
 
 export interface IRecipeState {
+  isAdded: boolean;
 }
 
 export const Recipe = class extends React.Component<IRecipeProps, IRecipeState> {
@@ -20,13 +21,21 @@ export const Recipe = class extends React.Component<IRecipeProps, IRecipeState> 
     super(props);
 
     this.state = {
+      isAdded: false
     }
   }
   private addToBasket = () => {
 
+    const recipe = this.props.recipe;
+
       update<IRecipe[]>("basketRecipes", (basket: IRecipe[]) =>{
+        if(basket && basket.some((item) => recipe == item) ){
+          return [...(basket || [])];
+        }else{
         console.log("basket:", basket)
-        return [...(basket || []),this.props.recipe]})
+        recipe.isAdded = true;
+        return [...(basket || []),this.props.recipe]}})
+      
     
  
   }
@@ -36,7 +45,8 @@ export const Recipe = class extends React.Component<IRecipeProps, IRecipeState> 
   }
 
   public render() {
-     const {recipe} = this.props
+     const {recipe} = this.props;
+     const {isAdded} = this.state;
     
     return (
       <React.Fragment>
@@ -49,7 +59,7 @@ export const Recipe = class extends React.Component<IRecipeProps, IRecipeState> 
         
         
         <span>     Add To Basket</span>
-        <Icon name="plus circle" size ="large"onClick={this.addToBasket}/>
+        {recipe.isAdded?<Icon name="minus circle" size ="large"/> :<Icon name="plus circle" size ="large"onClick={this.addToBasket}/>}
         </div>
         </React.Fragment>
     );
