@@ -1,6 +1,10 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Net.Mail;
+using System.IO;
+using System;
 
 namespace LerniaReact.Controllers
 {
@@ -12,10 +16,11 @@ namespace LerniaReact.Controllers
         const string FOOD_DATABASE_ID = "cd4cf0ad";
         const string FOOD_DATABASE_KEY = "63dd569834e24ed866292fc795fbdd31";
 
-        [Route("search/{query}/{startIndex}/{lastIndex}/{typeOfDiet}/{minCalories}/{maxCalories}/{health}/{maxCookTime}")]
-        public async Task Search([FromRoute] string query, [FromRoute] int startIndex, [FromRoute] int lastIndex,[FromRoute] string typeOfDiet, [FromRoute] int minCalories, [FromRoute] int maxCalories, [FromRoute] string health, [FromRoute] int maxCookTime)
+        [Route("search/{query}/{parameters}")]
+        public async Task Search([FromRoute] string query,[FromRoute] string parameters)
         {
-            await Query($"https://api.edamam.com/search?q={query}&app_id={RECIPE_SEARCH_ID}&app_key={RECIPE_SEARCH_KEY}&from={startIndex}&to={lastIndex}&diet={typeOfDiet}&calories={minCalories}-{maxCalories}&health={health}&time={maxCookTime}");
+            await Query($"https://api.edamam.com/search?q={query}&app_id={RECIPE_SEARCH_ID}&app_key={RECIPE_SEARCH_KEY}{parameters}");
+            //&from={startIndex}&to={lastIndex}&diet={typeOfDiet}&calories={minCalories}-{maxCalories}&health={health}&time={maxCookTime}
         }
         [Route("foodSearch/{query}")]
         public async Task FoodSearch([FromRoute] string query)
@@ -29,7 +34,24 @@ namespace LerniaReact.Controllers
             await Query($"https://api.edamam.com/api/food-database/nutrients?app_id={FOOD_DATABASE_ID}&app_key={FOOD_DATABASE_KEY}");
 
         }
+        [Route("SendMail/{TargetMail}/{MailTitle}/{MailBody}")]
+        public void SendMail(string TargetMail, string MailTitle, string MailBody)
+        {
+          
+            string SourceMail = "recipe.project.lernia@gmail.com";
+            string Password = "recipeproject666";
 
+            var client = new SmtpClient("stmp.gmail.com", 587){
+                Credentials = new NetworkCredential(SourceMail, Password),
+                EnableSsl = true
+            };
+            try {
+                  client.Send(SourceMail, TargetMail, MailTitle, MailBody);
+                  
+            }catch (Exception) {
+               
+            }
+        }
         private async Task Query(string url)
         {
             using (var request = new HttpClient())

@@ -88,21 +88,12 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
             <React.Fragment>
      
       <Menu fixed="top" inverted>
-    
-      
-      
+  
       <Menu.Item as="a"  position="left" style={{ marginTop:'1em', marginLeft: '3em'}}       
       onClick={ () => location.href = "#/"}>
       RecipeSearch
       </Menu.Item>
-
-
-      
-     
-     
-     
-
-      
+    
       </Menu>
       
       

@@ -19,7 +19,8 @@ export interface IRecipeSearchState {
     diet: string;
     cookTime: number;
     healthOption: string;
-    // recipes: IRecipe[];
+    startIndex: string;
+    lastIndex: string;
 }
 
 export const RecipeSearch = connect(class extends React.Component<IRecipeSearchProps, IRecipeSearchState> {
@@ -33,19 +34,31 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
             diet: '',
             cookTime: 0,
             healthOption: '',
-            // recipes : []
+            startIndex: "0",
+            lastIndex: "20"
         }
     }
     //search/{query}/{startIndex}/{lastIndex}/{typeOfDiet}/{minCalories}/{maxCalories}/{health}/{maxCookTime}
+     //&from={startIndex}&to={lastIndex}&diet={typeOfDiet}&calories={minCalories}-{maxCalories}&health={health}&time={maxCookTime}
+     ///0/20/${this.state.diet}/${this.state.minCalorie}/${this.state.maxCalorie}/${this.state.healthOption}/${this.state.cookTime}
     private fetchSelection = () => {
-
-        fetch(`api/search/${this.state.query}/0/20/${this.state.diet}/${this.state.minCalorie}/${this.state.maxCalorie}/${this.state.healthOption}/${this.state.cookTime}`)
+        let params = this.formatParams();
+        fetch(`api/search/${this.state.query}/${params}`)
             .then(res => res.json()).then(res => {
 
                 console.log(res);
                 this.transformIntoIRecipe(res);
             })
 
+    }
+    private formatParams = () => {
+        let parameters = `&from=${this.state.startIndex}&to=${this.state.lastIndex}`
+        if (this.state.maxCalorie > 0){parameters += `&calories=${this.state.minCalorie}-${this.state.maxCalorie}`}
+        if(this.state.diet.length > 0){parameters += `&diet=${this.state.diet}`}
+        if(this.state.cookTime > 0){parameters += `&time=${this.state.cookTime}`}
+        if(this.state.healthOption.length > 0){parameters +=`&health=${this.state.healthOption}` } 
+        console.log(parameters);
+        return parameters;
     }
     private transformIntoIRecipe = (apiResponse: any) => {
 
@@ -285,7 +298,7 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                             {recipes &&
                 
                                                 recipes.map((x: IRecipe, index: number) => {
-                                                    return <Segment size="small" key={index}>
+                                                    return <Segment size="small" className="recipeContrainer" key={index}>
                                                         <GridColumn>
                                                             <Recipe recipe={x} />
                                                         </GridColumn>

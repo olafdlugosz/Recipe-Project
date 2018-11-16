@@ -49,6 +49,11 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
     if (currPropsStr === nextPropsStr && currStateStr === nextStateStr) {
       return false;
     } else {
+      this.setState({amountOptions: [], unitOptions: []}, () => {
+        this.createAmountOptions();
+        this.createUnitOptions();
+
+      })
       return true;
     }
   }
@@ -145,6 +150,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
                   options={amountOptions}
                   placeholder='Select amount...'
                   onChange={this.handleAmountChange}
+                  clearable
                 />
                 <Dropdown
                   search
@@ -153,6 +159,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
                   options={unitOptions}
                   placeholder='Select unit...'
                   onChange={this.handleUnitChange}
+                  clearable
                 />
 
                 <Button onClick={this.fetchNutrientsDetails} disabled={!(amount.trim() && selectedUnit.trim())}>Get Nutrition Detailes!</Button>
