@@ -50,6 +50,12 @@ export const RecipeDetail = connect(class extends React.Component<IRecipeDetailP
   
 
 }
+private goToBasket = () => {
+  if(this.props.basketRecipes){
+      if(this.props.basketRecipes.length > 0){
+      location.href = "#/Checkout"}
+  }
+}
 
   public render() {
     const recipe = Store.selectedRecipe
@@ -76,7 +82,7 @@ export const RecipeDetail = connect(class extends React.Component<IRecipeDetailP
       </GridColumn>
      
      
-      <Menu.Item as='a' position="right" style={{ marginTop:'1em', marginLeft: '3em'}} onClick={() => location.href = "#/Checkout"}>
+      <Menu.Item as='a' position="right" style={{ marginTop:'1em', marginLeft: '3em'}} onClick={() => this.goToBasket()}>
           <Icon name="cart arrow down" size="big"></Icon>
 
           {basketRecipes &&

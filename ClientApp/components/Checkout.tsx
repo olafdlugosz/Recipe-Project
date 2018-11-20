@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {IRecipe, IIngredients, INutritionInfo} from '../interfaces/IRecipe';
-import { Segment,Icon, Image,Menu, Label,Button, Header, Grid, GridColumn, List, ListItem } from 'semantic-ui-react';
+import { Segment,Icon, Image,Menu, Label,Button, Header, Grid, GridColumn, List, ListItem, Container } from 'semantic-ui-react';
 import {connect, update} from 'react-imperator';
 import { CheckoutItem } from './CheckoutItem';
 
@@ -18,6 +18,13 @@ export const Checkout =  connect(class extends React.Component<ICheckoutProps, I
     this.state = {
     }
   }
+  componentDidUpdate = () => {
+      if(this.props.basketRecipes){
+          if(this.props.basketRecipes.length == 0){
+              location.href = "#/"
+          }
+      }
+  }
 
   public render() {
       const {basketRecipes} = this.props
@@ -28,13 +35,13 @@ export const Checkout =  connect(class extends React.Component<ICheckoutProps, I
         <GridColumn width={3}>
         
         
-        <Menu.Item as="a"  position="left" style={{ marginTop:'1em', marginLeft: '3em'}}       
+        <Menu.Item as="a"  position="left" style={{ marginTop:'1em'}}       
         onClick={ () => location.href = "#/"}>
         RecipeSearch
         </Menu.Item>
         </GridColumn>
         <GridColumn width={3}>
-        <Menu.Item as="a" style={{ marginTop:'1em', marginLeft: '3em'}}      
+        <Menu.Item as="a" style={{ marginTop:'1em'}}      
         onClick={ () => location.href = "#/FoodSearch"}>
         Food Analyzer
         </Menu.Item>
@@ -42,7 +49,7 @@ export const Checkout =  connect(class extends React.Component<ICheckoutProps, I
         </GridColumn>
        
        
-        <Menu.Item as='a' position="right" style={{ marginTop:'1em', marginLeft: '3em'}} onClick={() => location.href = "#/Checkout"}>
+        <Menu.Item as='a' position="right" style={{ marginTop:'1em', marginRight: '1em'}} onClick={() => location.href = "#/Checkout"}>
             <Icon name="cart arrow down" size="big"></Icon>
   
             {basketRecipes &&
@@ -51,9 +58,9 @@ export const Checkout =  connect(class extends React.Component<ICheckoutProps, I
         </Menu.Item>
         
         </Menu>
-        
         </Grid>
         <Grid columns="4" style={{marginTop: '6em'}}>
+
         <Grid.Row>
         
         {basketRecipes &&
@@ -67,6 +74,7 @@ export const Checkout =  connect(class extends React.Component<ICheckoutProps, I
                 
             })}
             </Grid.Row>
+
             </Grid>
             </React.Fragment>
     );

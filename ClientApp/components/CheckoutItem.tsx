@@ -32,6 +32,7 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
             }
             return [];
         })
+        
     }
     private SendByMail = () => {
         let targetMail = "olafdlugosz@gmail.com"
@@ -39,21 +40,24 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
         let messageBody = "It works"
         fetch(`api/SendMail/${targetMail}/${mailTitle}/${messageBody}`).catch(error => console.log(error))
     }
+    private formatCheckoutItemLabel = (label:string) => {
+        let stringToSplit = label.split(" ");
+        return stringToSplit[0] + " " + stringToSplit[1];
+      }
 
 
 
     public render() {
         const { checkoutItem } = this.props
+        // <Button onClick={() => this.SendByMail()}>Send Mail</Button>
         return (
             <div>
                 <Segment>
-
-                    <Header as="h3">{checkoutItem.label}</Header>
+                <Header as ="h3">{checkoutItem.label.length > 35? this.formatCheckoutItemLabel(checkoutItem.label) : checkoutItem.label }</Header>
                     <Image size="small" label={checkoutItem.source} src={checkoutItem.image}></Image>
                     <div>
-                    <Link to="/CheckoutItemDetail" onClick={() => Store.selectedRecipe = checkoutItem}>Details</Link>
+                    <Link to="/CheckoutItemDetail" style={{marginRight: "5px"}} onClick={() => Store.selectedRecipe = checkoutItem}>Details</Link>
                         Remove Recipe <Icon name="minus circle" onClick={this.removeFromBasket}></Icon>
-                        <Button onClick={() => this.SendByMail()}>Send Mail</Button>
                     </div>
                 </Segment>
             </div>

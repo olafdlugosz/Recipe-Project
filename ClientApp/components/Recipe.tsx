@@ -55,7 +55,7 @@ export const Recipe = class extends React.Component<IRecipeProps, IRecipeState> 
         <Image size ="small" label = {recipe.source} src = {recipe.image}></Image>
 
         <div>
-        <Link to="/RecipeDetail" onClick={() => Store.selectedRecipe = recipe}>Details</Link>
+        <Link to="/RecipeDetail" style={{marginRight: "5px"}}  onClick={() => Store.selectedRecipe = recipe}>Details</Link>
         
         
         <span>     Add To Basket</span>

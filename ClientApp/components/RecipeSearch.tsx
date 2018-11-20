@@ -77,6 +77,44 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
         if(this.state.healthOption.length > 0){parameters +=`&health=${this.state.healthOption}` } 
         return parameters;
     }
+    private handleNextClick = () => {
+        let startIndex = Number(this.state.startIndex)
+        let lastIndex = Number(this.state.lastIndex)
+        let que = this.state.query
+        let nextStartIndex = startIndex + 20;
+        let nextLastIndex = lastIndex + 20;
+        if(que.length == 0){
+            que = "chicken"
+        }
+
+        this.setState({ query: que, startIndex: nextStartIndex.toString(), lastIndex: nextLastIndex.toString()}, () => {
+            this.fetchSelection()
+        })
+
+    }
+    private handleBackClick = () => {
+        let startIndex = Number(this.state.startIndex)
+        let lastIndex = Number(this.state.lastIndex)
+        let que = this.state.query
+        let nextStartIndex = startIndex - 20;
+        let nextLastIndex = lastIndex - 20;
+        if(que.length == 0){
+            que = "chicken"
+        }
+
+        this.setState({ query: que, startIndex: nextStartIndex.toString(), lastIndex: nextLastIndex.toString()}, () => {
+            this.fetchSelection()
+        })
+    }
+    private disableBackClick = () => {
+        let startIndex = Number(this.state.startIndex)
+        if(startIndex > 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     private transformIntoIRecipe = (apiResponse: any) => {
 
         let recipeArray: IRecipe[];
@@ -150,6 +188,12 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
     }
     private handleHealthOptionChange = (e: React.SyntheticEvent<HTMLElement>, selected: any) => {
         this.setState({ healthOption: selected.value })
+    }
+    private goToBasket = () => {
+        if(this.props.basketRecipes){
+            if(this.props.basketRecipes.length > 0){
+            location.href = "#/Checkout"}
+        }
     }
     public render() {
         const { query, isLoading } = this.state
@@ -238,7 +282,7 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
             Food Analyzer
             </Menu.Item>
             <Header as ="h4" color="olive"> Here you can search for your favorite recipies!</Header>
-            <Menu.Item as='a' position="right" style={{ marginTop:'1em', marginLeft: '3em'}} onClick={() => location.href = "#/Checkout"}>
+            <Menu.Item as='a' position="right" style={{ marginTop:'1em', marginRight: '1em'}} onClick={() => this.goToBasket()}>
                 <Icon name="cart arrow down" size="big"></Icon>
     
                 {basketRecipes &&
@@ -302,7 +346,15 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                         onChange={this.handleHealthOptionChange}
                                         loading={isLoading}
                                     />
-                                    <Button style={{marginTop: '5px'}}onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
+                                    <Button style={{marginTop: '5px'}}nClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
+                                    <div style={{marginTop: '5px'}}>
+                                    <Button circular icon  disabled={this.disableBackClick()} onClick={ () => this.handleBackClick()}>
+                                    <Icon name="arrow circle left"size="huge" />
+                                    </Button>
+                                    <Button circular icon disabled={!recipes? true : false} onClick={ () => this.handleNextClick()}>
+                                    <Icon name="arrow circle right"  size="huge"/>
+                                    </Button>
+                                    </div>
                                     </Segment>
                                 </GridColumn>
                                 <GridColumn width={14}>
@@ -320,7 +372,8 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                                     </Segment>
                 
                                                 })}
-                                        </Grid.Row>
+                                                </Grid.Row>
+                                                
                                     </Grid>
                                 </React.Fragment>
                                 </GridColumn>
