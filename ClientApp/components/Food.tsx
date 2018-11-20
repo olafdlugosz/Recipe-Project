@@ -143,7 +143,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
           <Grid.Row>
             <Grid.Column width={13}>
               <Header as="h3">{food.brand}{food.label}</Header>
-              <p>{food.foodContentsLabel}</p>
+              
               <Grid.Row>
                 <Dropdown
                   search

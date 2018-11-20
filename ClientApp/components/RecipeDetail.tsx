@@ -9,6 +9,7 @@ import {update, connect} from "react-imperator";
 
 export interface IRecipeDetailProps {
   basketRecipes?: IRecipe[];
+  
 }
 
 export interface IRecipeDetailState {

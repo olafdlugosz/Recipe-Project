@@ -3,6 +3,8 @@ import { IRecipe } from 'ClientApp/interfaces/IRecipe';
 import { Segment, Icon, Image, Header,Button, Grid, GridColumn, List, ListItem } from 'semantic-ui-react';
 import { connect, update } from 'react-imperator';
 import { RecipeSearch } from '../components/RecipeSearch';
+import { Router, Route, Link, Redirect } from "react-router-dom";
+import Store from "../interfaces/Store";
 
 export interface ICheckoutItemProps {
     checkoutItem: IRecipe
@@ -49,6 +51,7 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
                     <Header as="h3">{checkoutItem.label}</Header>
                     <Image size="small" label={checkoutItem.source} src={checkoutItem.image}></Image>
                     <div>
+                    <Link to="/RecipeDetail" onClick={() => Store.selectedRecipe = checkoutItem}>Details</Link>
                         Remove Recipe <Icon name="minus circle" onClick={this.removeFromBasket}></Icon>
                         <Button onClick={() => this.SendByMail()}>Send Mail</Button>
                     </div>

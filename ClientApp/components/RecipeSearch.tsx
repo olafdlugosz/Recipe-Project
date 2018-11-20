@@ -21,6 +21,7 @@ export interface IRecipeSearchState {
     healthOption: string;
     startIndex: string;
     lastIndex: string;
+    isLoading: boolean;
 }
 
 export const RecipeSearch = connect(class extends React.Component<IRecipeSearchProps, IRecipeSearchState> {
@@ -35,13 +36,26 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
             cookTime: 0,
             healthOption: '',
             startIndex: "0",
-            lastIndex: "20"
+            lastIndex: "20",
+            isLoading: false
         }
+    }
+    componentDidMount = () => {
+        this.setState({isLoading: true})
+        let params = `&from=${this.state.startIndex}&to=${this.state.lastIndex}`
+        let query = "chicken";
+        fetch(`api/search/${query}/${params}`)
+            .then(res => res.json()).then(res => {
+
+                console.log(res);
+                this.transformIntoIRecipe(res);
+            })
     }
     //search/{query}/{startIndex}/{lastIndex}/{typeOfDiet}/{minCalories}/{maxCalories}/{health}/{maxCookTime}
      //&from={startIndex}&to={lastIndex}&diet={typeOfDiet}&calories={minCalories}-{maxCalories}&health={health}&time={maxCookTime}
      ///0/20/${this.state.diet}/${this.state.minCalorie}/${this.state.maxCalorie}/${this.state.healthOption}/${this.state.cookTime}
     private fetchSelection = () => {
+        this.setState({isLoading: true})
         let params = this.formatParams();
         fetch(`api/search/${this.state.query}/${params}`)
             .then(res => res.json()).then(res => {
@@ -101,8 +115,10 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
         });
 
         update<IRecipe[]>("recipes", () => recipeArray)
+        this.setState({isLoading: false})
 
     }
+
     private onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.which != 13 || !(this.state.query.trim())) {
             return;
@@ -132,7 +148,7 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
         this.setState({ healthOption: selected.value })
     }
     public render() {
-        const { query } = this.state
+        const { query, isLoading } = this.state
         const { recipes, basketRecipes } = this.props
 
         const minCalorieDropdownOptions = [
@@ -207,19 +223,6 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
             { key: 'Vegetarian', text: 'Vegetarian', value: 'vegetarian' },
             { key: 'Wheat-free', text: 'Wheat-free', value: 'wheat-free' },
         ]
-    //     <Menu compact>
-    //     <Menu.Item as="a"           
-    //     onClick={ () => location.href = "#/FoodSearch"}>
-    //     Food Analyzer
-    //     </Menu.Item>
-    //     <Menu.Item as='a' onClick={() => location.href = "#/Checkout"}>
-    //         <Icon name="cart arrow down" size="big"></Icon>
-
-    //         {basketRecipes &&
-    //             <Label color='red' floating> {basketRecipes.length}</Label>}
-
-    //     </Menu.Item>
-    // </Menu>style={{ marginTop: '3em' }}
 
         return (
 
@@ -244,16 +247,20 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                     <GridColumn >
                         
                             <Grid columns={2} celled>
-                                <GridColumn width="2" >
-                                    <Input value={query} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="choose your main ingredient" />
+                            <GridColumn width="2" >
+                            <Segment >
+                                    <Input size = "medium" value={query} loading={isLoading} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="choose your main ingredient" />
 
                                     <Dropdown
+                                    style={{marginRight: '2em'}}
                                         search
                                         searchInput={{ type: 'number' }}
                                         selection
                                         options={minCalorieDropdownOptions}
                                         placeholder='Select minimum calories...'
                                         onChange={this.handleMinCalorieChange}
+                                        loading={isLoading}
+                                        
                                     />
                                     <Dropdown
                                         search
@@ -262,6 +269,7 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                         options={maxCalorieDropdownOptions}
                                         placeholder='Select maximum calories...'
                                         onChange={this.handleMaxCalorieChange}
+                                        loading={isLoading}
                                     />
                                     <Dropdown
                                         search
@@ -270,6 +278,7 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                         options={dietDropdownOptions}
                                         placeholder='Select your diet...'
                                         onChange={this.handleDietChange}
+                                        loading={isLoading}
                                     />
                                     <Dropdown
                                         search
@@ -278,6 +287,7 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                         options={cookTimeDropdownOptions}
                                         placeholder='choose max Cook Time'
                                         onChange={this.handleCookTimeChange}
+                                        loading={isLoading}
                                     />
                                     <Dropdown
                                         search
@@ -286,10 +296,11 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                         options={healthDropdownOptions}
                                         placeholder='choose your health option'
                                         onChange={this.handleHealthOptionChange}
+                                        loading={isLoading}
                                     />
                                     <Button style={{marginTop: '5px'}}onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
+                                    </Segment>
                                 </GridColumn>
-                               
                                 <GridColumn width={14}>
 
                                     <React.Fragment>
@@ -300,7 +311,7 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                                 recipes.map((x: IRecipe, index: number) => {
                                                     return <Segment size="small" className="recipeContrainer" key={index}>
                                                         <GridColumn>
-                                                            <Recipe recipe={x} />
+                                                            <Recipe  recipe={x} />
                                                         </GridColumn>
                                                     </Segment>
                 

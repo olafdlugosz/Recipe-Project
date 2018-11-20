@@ -20,9 +20,12 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
         super(props);
 
         this.state = {
-            query: "chicken",
-            // foods: []
+            query: "Big Mac",
+            
         }
+    }
+    componentDidMount = () => {
+        this.fetchSelection();
     }
     private fetchSelection = () => {
 
@@ -83,6 +86,9 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
         console.log(e.currentTarget.value);
         this.setState({ query: e.currentTarget.value });
     }
+    private onSearchButtonClick = () => {
+        this.fetchSelection();
+    }
 
     public render() {
         const { query } = this.state;
@@ -111,7 +117,7 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
             <div>
                 <Segment style={{marginTop: '6em'}}>
                     <Input value={query} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="search for any food" />
-                 
+                    <Button style={{marginTop: '5px'}}onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
                 </Segment>
                 <React.Fragment>
                     {foods &&
