@@ -5,6 +5,7 @@ import {HashRouter, Switch, Route} from "react-router-dom";
 import { RecipeDetail } from './RecipeDetail';
 import {FoodSearch} from './FoodSearch';
 import {Checkout} from './Checkout';
+import {CheckoutItemDetail} from'./CheckoutItemDetail';
 
 export interface IHomeProps {
 }
@@ -29,6 +30,7 @@ export class Home extends React.Component<IHomeProps, IHomeState> {
   <Route path='/Checkout' component={Checkout}/>
   <Route path='/RecipeDetail' component={RecipeDetail}/>
   <Route path='/FoodSearch' component={FoodSearch}/>
+  <Route path='/CheckoutItemDetail' component={CheckoutItemDetail}/>
 </Switch>
 
       </div>

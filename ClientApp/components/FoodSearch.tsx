@@ -13,6 +13,7 @@ export interface IFoodSearchProps {
 
 export interface IFoodSearchState {
     query: string;
+    isLoading: boolean;
 }
 
 export const FoodSearch = connect(class extends React.Component<IFoodSearchProps, IFoodSearchState> {
@@ -21,11 +22,15 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
 
         this.state = {
             query: "Big Mac",
+            isLoading: false
             
         }
     }
     componentDidMount = () => {
+        if(!this.props.foods){
+            this.setState({isLoading: true})
         this.fetchSelection();
+        }
     }
     private fetchSelection = () => {
 
@@ -34,6 +39,7 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
 
                 console.log(res);
                 this.transformIntoIFood(res);
+                this.setState({isLoading: false})
             })
 
     }
@@ -91,7 +97,7 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
     }
 
     public render() {
-        const { query } = this.state;
+        const { query, isLoading } = this.state;
         const { foods, basketRecipes } = this.props;
         return (
             <React.Fragment>
@@ -116,7 +122,7 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
       
             <div>
                 <Segment style={{marginTop: '6em'}}>
-                    <Input value={query} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="search for any food" />
+                    <Input value={query} onKeyUp={this.onKeyUp} loading={isLoading}  onChange={this.onTextChange} placeholder="search for any food" />
                     <Button style={{marginTop: '5px'}}onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
                 </Segment>
                 <React.Fragment>

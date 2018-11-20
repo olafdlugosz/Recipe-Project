@@ -41,6 +41,7 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
         }
     }
     componentDidMount = () => {
+        if(!this.props.recipes){
         this.setState({isLoading: true})
         let params = `&from=${this.state.startIndex}&to=${this.state.lastIndex}`
         let query = "chicken";
@@ -50,6 +51,9 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                 console.log(res);
                 this.transformIntoIRecipe(res);
             })
+        }else {
+            return;
+        }
     }
     //search/{query}/{startIndex}/{lastIndex}/{typeOfDiet}/{minCalories}/{maxCalories}/{health}/{maxCookTime}
      //&from={startIndex}&to={lastIndex}&diet={typeOfDiet}&calories={minCalories}-{maxCalories}&health={health}&time={maxCookTime}
