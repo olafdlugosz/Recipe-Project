@@ -66,7 +66,7 @@ export const Checkout =  connect(class extends React.Component<ICheckoutProps, I
         {basketRecipes &&
             
             basketRecipes.map((x: IRecipe, index: number) => {
-                return <Segment size="small"key={index}>
+                return <Segment style={{marginTop: "1em"}} size="small"key={index}>
                  <GridColumn>
                 <CheckoutItem checkoutItem = {x}/>
                 </GridColumn>

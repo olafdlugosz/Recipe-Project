@@ -138,9 +138,9 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
     const { amount, selectedUnit, foodDetails, isFetched, amountOptions, unitOptions, isLoading } = this.state
 
     return (
-      <Segment>
+      <Segment color='yellow'>
         <Grid celled>
-          <Grid.Row>
+          <Grid.Row >
             <Grid.Column width={13}>
               <Header as="h3">{food.brand}{food.label}</Header>
               

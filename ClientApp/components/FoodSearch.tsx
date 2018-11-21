@@ -126,21 +126,22 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
       </Menu>
       
       
-            <div>
-                <Segment style={{marginTop: '6em'}}>
+            <Container>
+                <Segment style={{marginTop: '6em'}} inverted color="yellow">
                     <Input value={query} onKeyUp={this.onKeyUp} loading={isLoading}  onChange={this.onTextChange} placeholder="search for any food" />
                     <Button style={{marginTop: '5px'}}onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
                 </Segment>
                 <React.Fragment>
                     {foods &&
                         foods.map((item: IFood, index: number) => {
-                            return <List key={index}>
+                            return <Container ><List key={index}>
                                 <ListItem><Food food={item} /></ListItem>
                             </List>
+                            </Container>
                         })
                     }
                 </React.Fragment>
-            </div>
+            </Container>
             </React.Fragment>
         );
     }
