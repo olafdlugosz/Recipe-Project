@@ -18,6 +18,7 @@ export const Checkout =  connect(class extends React.Component<ICheckoutProps, I
     this.state = {
     }
   }
+  //Kick the user out if Checkout is empty
   componentDidUpdate = () => {
       if(this.props.basketRecipes){
           if(this.props.basketRecipes.length == 0){

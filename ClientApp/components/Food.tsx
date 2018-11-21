@@ -123,6 +123,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
     console.log("this is data:", data)
     this.transformIntoIFoodDetails(data as IFoodDetails);
   }
+  
   private transformIntoIFoodDetails = (apiResponse: IFoodDetails) => {
 
     let foodDetails: IFoodDetails;

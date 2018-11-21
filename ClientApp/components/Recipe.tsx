@@ -13,7 +13,7 @@ export interface IRecipeProps {
 }
 
 export interface IRecipeState {
-  isAdded: boolean;
+
 }
 
 export const Recipe = class extends React.Component<IRecipeProps, IRecipeState> {
@@ -21,7 +21,6 @@ export const Recipe = class extends React.Component<IRecipeProps, IRecipeState> 
     super(props);
 
     this.state = {
-      isAdded: false
     }
   }
   private addToBasket = () => {
@@ -46,7 +45,6 @@ export const Recipe = class extends React.Component<IRecipeProps, IRecipeState> 
 
   public render() {
      const {recipe} = this.props;
-     const {isAdded} = this.state;
     
     return (
       <React.Fragment>
