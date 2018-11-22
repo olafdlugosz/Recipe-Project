@@ -1,11 +1,9 @@
 import * as React from 'react';
-import { Segment, Input, Button, Dropdown, Grid, GridColumn, Divider, Icon, Label, Menu, MenuItem, Container, Header } from 'semantic-ui-react';
+import { Segment, Input, Button, Dropdown, Grid, GridColumn, Icon, Label, Menu, Header } from 'semantic-ui-react';
 import { IRecipe, IIngredients, INutritionInfo } from '../interfaces/IRecipe';
 import { Recipe } from '../components/Recipe';
-import { Router, Route, Link, Redirect } from "react-router-dom";
-import Store from "../interfaces/Store";
 import { connect, update } from 'react-imperator';
-import { Checkout } from './Checkout';
+import "../css/styles.css";
 
 export interface IRecipeSearchProps {
     recipes?: IRecipe[];
@@ -48,9 +46,6 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
             let lastStartIndex = Number(this.props.lastStartIndex)
             let keepLastIndex = lastStartIndex + 20
             this.setState({ startIndex: this.props.lastStartIndex, lastIndex: keepLastIndex.toString() }, () => {
-                console.log("startIndex: ", this.state.startIndex, "lastIndex: ", this.state.lastIndex)
-                console.log("lastStartINdex: ", this.props.lastStartIndex)
-
             })
         }
         //Populates the page with chicken query upon first open
@@ -60,24 +55,17 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
             let query = "chicken";
             fetch(`api/search/${query}/${params}`)
                 .then(res => res.json()).then(res => {
-
-                    console.log(res);
                     this.transformIntoIRecipe(res);
                 })
         } else {
             return;
         }
     }
-    //search/{query}/{startIndex}/{lastIndex}/{typeOfDiet}/{minCalories}/{maxCalories}/{health}/{maxCookTime}
-    //&from={startIndex}&to={lastIndex}&diet={typeOfDiet}&calories={minCalories}-{maxCalories}&health={health}&time={maxCookTime}
-    ///0/20/${this.state.diet}/${this.state.minCalorie}/${this.state.maxCalorie}/${this.state.healthOption}/${this.state.cookTime}
     private fetchSelection = () => {
         this.setState({ isLoading: true })
         let params = this.formatParams();
         fetch(`api/search/${this.state.query}/${params}`)
             .then(res => res.json()).then(res => {
-
-                console.log(res);
                 this.transformIntoIRecipe(res);
             })
         update<string>("lastQuery", () => this.state.query)
@@ -321,7 +309,6 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                             <Label color='red' floating> {basketRecipes.length}</Label>}
 
                     </Menu.Item>
-
                 </Menu>
                 <Grid style={{ marginTop: '3em' }} >
                     <GridColumn >
@@ -330,7 +317,6 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                             <GridColumn width="2"  >
                                 <Segment >
                                     <Input fluid size="medium" value={query} loading={isLoading} onKeyUp={this.onKeyUp} onChange={this.onTextChange} placeholder="choose your main ingredient" />
-
                                     <Dropdown
                                         fluid
                                         search
@@ -340,7 +326,6 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                         placeholder='Select minimum calories...'
                                         onChange={this.handleMinCalorieChange}
                                         loading={isLoading}
-
                                     />
                                     <Dropdown
                                         fluid
@@ -391,34 +376,27 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                         <Button circular icon disabled={!recipes ? true : false} onClick={() => this.handleNextClick()}>
                                             <Icon name="arrow circle right" size="huge" />
                                         </Button>
-                                        <Header as ="h2" style={{marginLeft: "40px"}}>{this.state.startIndex} - {this.state.lastIndex}</Header>
-                                        
+                                        <Header as="h2" style={{ marginLeft: "40px" }}>{this.state.startIndex} - {this.state.lastIndex}</Header>
                                     </div>
                                 </Segment>
                             </GridColumn>
                             <GridColumn width={14}>
-
                                 <React.Fragment>
                                     <Grid columns="4">
                                         <Grid.Row>
                                             {recipes &&
-
                                                 recipes.map((x: IRecipe, index: number) => {
-                                                    return <Segment size="small" style={{ marginTop: "1em" }} className="recipeContainer" key={index}>
+                                                    return <Segment style={{ marginTop: "1em", marginLeft: "10px" }} className="recipeContainer" key={index}>
                                                         <GridColumn>
                                                             <Recipe recipe={x} />
                                                         </GridColumn>
                                                     </Segment>
-
                                                 })}
                                         </Grid.Row>
-
                                     </Grid>
                                 </React.Fragment>
                             </GridColumn>
                         </Grid>
-
-
                     </GridColumn>
                 </Grid>
 

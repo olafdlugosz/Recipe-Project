@@ -1,27 +1,19 @@
 import * as React from 'react';
 import { IRecipe, IIngredients, INutritionInfo } from 'ClientApp/interfaces/IRecipe';
 import Store from "../interfaces/Store";
-import { Container, Segment, TableRow, Menu, Label, Icon, Image, Grid, Header, List, Table, TableBody, TableCell, TableFooter, TableHeader, TableHeaderCell, GridColumn, GridRow } from 'semantic-ui-react';
-import { Router, Route, Link, Redirect } from "react-router-dom";
-import { RecipeSearch } from './RecipeSearch';
+import { Container, Segment, TableRow, Menu, Label, Icon, Image, Grid, Header, List, Table, TableBody, TableCell, TableHeader, TableHeaderCell, GridColumn } from 'semantic-ui-react';
+import { Link } from "react-router-dom";
 import { update, connect } from "react-imperator";
 
 
 export interface IRecipeDetailProps {
   basketRecipes?: IRecipe[];
-
 }
 
-export interface IRecipeDetailState {
-}
 
-export const RecipeDetail = connect(class extends React.Component<IRecipeDetailProps, IRecipeDetailState> {
+export const RecipeDetail = connect(class extends React.Component<IRecipeDetailProps> {
   constructor(props: IRecipeDetailProps) {
     super(props);
-
-    this.state = {
-
-    }
   }
   private formatWeightOrCalories = (calories: number) => {
     let cal = calories.toString();
@@ -45,11 +37,8 @@ export const RecipeDetail = connect(class extends React.Component<IRecipeDetailP
   private addToBasket = () => {
 
     update<IRecipe[]>("basketRecipes", (basket: IRecipe[]) => {
-      console.log("basket:", basket)
       return [...(basket || []), Store.selectedRecipe]
     })
-
-
   }
   private goToBasket = () => {
     if (this.props.basketRecipes) {
@@ -62,28 +51,22 @@ export const RecipeDetail = connect(class extends React.Component<IRecipeDetailP
   public render() {
     const recipe = Store.selectedRecipe
     const { basketRecipes } = this.props;
-    console.log(recipe)
     return (
       <React.Fragment>
         <Grid columns={3}>
           <Menu fixed="top" inverted>
             <GridColumn width={3}>
-
-
               <Menu.Item as="a" position="left" style={{ marginTop: '1em', marginLeft: '3em' }}
                 onClick={() => location.href = "#/"}>
                 RecipeSearch
-      </Menu.Item>
+          </Menu.Item>
             </GridColumn>
             <GridColumn width={3}>
               <Menu.Item as="a" style={{ marginTop: '1em', marginLeft: '3em' }}
                 onClick={() => location.href = "/FoodSearch"}>
                 Food Analyzer
-      </Menu.Item>
-
+          </Menu.Item>
             </GridColumn>
-
-
             <Menu.Item as='a' position="right" style={{ marginTop: '1em', marginLeft: '3em' }} onClick={() => this.goToBasket()}>
               <Icon name="cart arrow down" size="big"></Icon>
 
@@ -91,9 +74,7 @@ export const RecipeDetail = connect(class extends React.Component<IRecipeDetailP
                 <Label color='red' floating> {basketRecipes.length}</Label>}
 
             </Menu.Item>
-
           </Menu>
-
         </Grid>
         <div>
           <Container style={{ marginTop: '6em' }}>

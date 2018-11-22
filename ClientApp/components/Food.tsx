@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { IFood, IMeasure } from 'ClientApp/interfaces/IFood';
-import { Segment, ModalProps, Header, Label, Dropdown, Button, List, ListItem, Grid, GridColumn, GridRow, ItemContent, Icon, Image, Modal } from 'semantic-ui-react';
-import { IFoodDetails, IUnitInfo, ITotalDaily, ITotalNutrients, IIngredient, IParsed } from 'ClientApp/interfaces/IFoodDetails';
+import { IFood, } from 'ClientApp/interfaces/IFood';
+import { Segment, Header, Dropdown, Button, Grid, Modal } from 'semantic-ui-react';
+import { IFoodDetails} from 'ClientApp/interfaces/IFoodDetails';
 import { FoodDetail } from './FoodDetail';
 
 
@@ -41,7 +41,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
   //Take away this function and see a drastic performance drop in the input of FoodSearch component
   //I cannot seem to locate the bottleneck, but chrome will throw timeout, reflow [Violation] 
   //If one wants to type in the input after data has been fetched. Any help in locating the bottleneck
-  //will be appreciated...This issue presists after trying different dropdown menus, taking away maps etc
+  //will be appreciated...This issue presists after trying different dropdown menus, taking them away, taking away maps etc
   //What is going on??
   shouldComponentUpdate(nextProps: IFoodProps, nextState: IFoodState) {
     let currPropsStr = JSON.stringify(this.props);
@@ -119,8 +119,6 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
 
     }
     ).then(response => response.json());
-    // const json = await data.json()
-    console.log("this is data:", data)
     this.transformIntoIFoodDetails(data as IFoodDetails);
   }
   
@@ -129,10 +127,7 @@ export class Food extends React.Component<IFoodProps, IFoodState> {
     let foodDetails: IFoodDetails;
     //the spread operator just took away all the fun of manually transforming objects to interfaces..
     foodDetails = { ...apiResponse };
-
-    console.log("foodDetails", foodDetails);
     this.setState({ foodDetails: foodDetails, isFetched: true, isLoading: false })
-
   }
   public render() {
     const { food } = this.props

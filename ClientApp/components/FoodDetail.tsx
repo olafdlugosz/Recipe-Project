@@ -1,23 +1,18 @@
 import * as React from 'react';
-import { IFoodDetails, IMergedIFoodForTable, IUnitInfo, ITotalDaily, ITotalNutrients, IIngredient, IParsed } from 'ClientApp/interfaces/IFoodDetails';
-import { Container, Segment, TableRow, Icon, Image, Grid, Header, List, Table, TableBody, TableCell, TableFooter, TableHeader, TableHeaderCell, Item, GridColumn } from 'semantic-ui-react';
-import ToolBox from '../Utilities/ToolBox';
+import { IFoodDetails } from 'ClientApp/interfaces/IFoodDetails';
+import { TableRow, Grid, Table, TableBody, TableCell, TableHeader, TableHeaderCell, GridColumn } from 'semantic-ui-react';
 
 export interface IFoodDetailProps {
   foodDetails: IFoodDetails
 }
 
-export interface IFoodDetailState {
-}
 
-export class FoodDetail extends React.Component<IFoodDetailProps, IFoodDetailState> {
+
+export class FoodDetail extends React.Component<IFoodDetailProps> {
   constructor(props: IFoodDetailProps) {
     super(props);
 
-    this.state = {    
-    }
   }
-
 
   private formatNutritionInfoTotal = (total: number) => {
     let tot = total.toString();
@@ -28,7 +23,6 @@ export class FoodDetail extends React.Component<IFoodDetailProps, IFoodDetailSta
     } else {
       return tot;
     }
-   
   }
 
   public render() {
@@ -83,9 +77,6 @@ export class FoodDetail extends React.Component<IFoodDetailProps, IFoodDetailSta
                           {this.formatNutritionInfoTotal(foodDetails.totalDaily[key].quantity)}
                           {foodDetails.totalDaily[key].unit}
                         </TableCell>
-
-
-
                       </Table.Row>;
                     })}
 
@@ -94,7 +85,7 @@ export class FoodDetail extends React.Component<IFoodDetailProps, IFoodDetailSta
               </Table>
             </GridColumn>
           </Grid>
-          }
+        }
       </div>
     );
   }

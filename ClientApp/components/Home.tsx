@@ -1,38 +1,24 @@
 import * as React from 'react';
-import {Container} from 'semantic-ui-react';
 import { RecipeSearch } from './RecipeSearch';
-import {HashRouter, Switch, Route} from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
 import { RecipeDetail } from './RecipeDetail';
-import {FoodSearch} from './FoodSearch';
-import {Checkout} from './Checkout';
-import {CheckoutItemDetail} from'./CheckoutItemDetail';
+import { FoodSearch } from './FoodSearch';
+import { Checkout } from './Checkout';
+import { CheckoutItemDetail } from './CheckoutItemDetail';
 
-export interface IHomeProps {
-}
 
-export interface IHomeState {
-}
-
-export class Home extends React.Component<IHomeProps, IHomeState> {
-  constructor(props: IHomeProps) {
-    super(props);
-
-    this.state = {
-    }
-  }
+export class Home extends React.Component {
 
   public render() {
     return (
       <div>
-      
-      <Switch>
-  <Route exact path='/' component={RecipeSearch}/>
-  <Route path='/Checkout' component={Checkout}/>
-  <Route path='/RecipeDetail' component={RecipeDetail}/>
-  <Route path='/FoodSearch' component={FoodSearch}/>
-  <Route path='/CheckoutItemDetail' component={CheckoutItemDetail}/>
-</Switch>
-
+        <Switch>
+          <Route exact path='/' component={RecipeSearch} />
+          <Route path='/Checkout' component={Checkout} />
+          <Route path='/RecipeDetail' component={RecipeDetail} />
+          <Route path='/FoodSearch' component={FoodSearch} />
+          <Route path='/CheckoutItemDetail' component={CheckoutItemDetail} />
+        </Switch>
       </div>
     );
   }

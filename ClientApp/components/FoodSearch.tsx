@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Segment, Input,Header, Button, Dropdown,Menu, Label,Icon, Grid, GridColumn, Container, List, ListItem } from 'semantic-ui-react';
+import { Segment, Input, Header, Button, Menu, Label, Icon, Container, List, ListItem } from 'semantic-ui-react';
 import { IFood, IMeasure } from '../interfaces/IFood';
 import { Food } from './Food';
 import { connect, update } from 'react-imperator';
-import { Router, Route, Link, Redirect } from "react-router-dom";
 import { IRecipe } from 'ClientApp/interfaces/IRecipe';
 
 export interface IFoodSearchProps {
@@ -23,28 +22,25 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
         this.state = {
             query: "Big Mac",
             isLoading: false
-            
         }
     }
+    //Populate the page with a Bic Mac query upon first open
     componentDidMount = () => {
-        if(!this.props.foods){
-            this.setState({isLoading: true})
-        this.fetchSelection();
+        if (!this.props.foods) {
+            this.setState({ isLoading: true })
+            this.fetchSelection();
         }
     }
     private fetchSelection = () => {
 
         fetch(`api/foodSearch/${this.state.query}`)
             .then(res => res.json()).then(res => {
-
-                console.log(res);
                 this.transformIntoIFood(res);
-                this.setState({isLoading: false})
+                this.setState({ isLoading: false })
             })
 
     }
     private transformIntoIFood = (apiResponse: any) => {
-
         //yes, i know I could've just used a spread operator.. I learnt that later and this was fun.
         let foodArray: IFood[];
         let foodObject: IFood;
@@ -79,26 +75,24 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
             }
             foodArray.push(foodObject);
         });
-        console.log(foodArray);
         update<IFood[]>("foods", () => foodArray)
     }
     private onKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.which == 13 && this.state.query.length > 0) {
-
             this.fetchSelection()
         }
     }
     private onTextChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
-        console.log(e.currentTarget.value);
         this.setState({ query: e.currentTarget.value });
     }
     private onSearchButtonClick = () => {
         this.fetchSelection();
     }
     private goToBasket = () => {
-        if(this.props.basketRecipes){
-            if(this.props.basketRecipes.length > 0){
-            location.href = "#/Checkout"}
+        if (this.props.basketRecipes) {
+            if (this.props.basketRecipes.length > 0) {
+                location.href = "#/Checkout"
+            }
         }
     }
 
@@ -107,41 +101,38 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
         const { foods, basketRecipes } = this.props;
         return (
             <React.Fragment>
-     
-            <Menu fixed="top" inverted>
-            
-            <Menu.Item as="a"  position="left"        
-            onClick={ () => location.href = "#/"}>
-            Recipe Search
-            </Menu.Item>
-            <Header as ="h4" color="olive"> Here you can find nutritional information for your favorite foods!</Header>
-            <Menu.Item as='a' position="right" style={{ marginTop:'1em', marginRight: '1em'}} onClick={() => this.goToBasket()}>
-                <Icon name="cart arrow down" size="big"></Icon>
-    
-                {basketRecipes &&
-                    <Label color='red' floating> {basketRecipes.length}</Label>}
-    
-            </Menu.Item>
-    
-      </Menu>
-      
-      
-            <Container>
-                <Segment style={{marginTop: '6em'}} inverted color="yellow">
-                    <Input value={query} onKeyUp={this.onKeyUp} loading={isLoading}  onChange={this.onTextChange} placeholder="search for any food" />
-                    <Button style={{marginTop: '5px'}}onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
-                </Segment>
-                <React.Fragment>
-                    {foods &&
-                        foods.map((item: IFood, index: number) => {
-                            return <Container ><List key={index}>
-                                <ListItem><Food food={item} /></ListItem>
-                            </List>
-                            </Container>
-                        })
-                    }
-                </React.Fragment>
-            </Container>
+                <Menu fixed="top" inverted>
+
+                    <Menu.Item as="a" position="left"
+                        onClick={() => location.href = "#/"}>
+                        Recipe Search
+                    </Menu.Item>
+                    <Header as="h4" color="olive"> Here you can find nutritional information for your favorite foods!</Header>
+                    <Menu.Item as='a' position="right" style={{ marginTop: '1em', marginRight: '1em' }} onClick={() => this.goToBasket()}>
+                        <Icon name="cart arrow down" size="big"></Icon>
+
+                        {basketRecipes &&
+                            <Label color='red' floating> {basketRecipes.length}</Label>}
+
+                    </Menu.Item>
+
+                </Menu>
+                <Container>
+                    <Segment style={{ marginTop: '6em' }} inverted color="yellow">
+                        <Input value={query} onKeyUp={this.onKeyUp} loading={isLoading} onChange={this.onTextChange} placeholder="search for any food" />
+                        <Button style={{ marginTop: '5px' }} onClick={this.onSearchButtonClick} disabled={!(query.trim())}>Search</Button>
+                    </Segment>
+                    <React.Fragment>
+                        {foods &&
+                            foods.map((item: IFood, index: number) => {
+                                return <Container ><List key={index}>
+                                    <ListItem><Food food={item} /></ListItem>
+                                </List>
+                                </Container>
+                            })
+                        }
+                    </React.Fragment>
+                </Container>
             </React.Fragment>
         );
     }
