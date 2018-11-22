@@ -109,7 +109,7 @@ export const FoodSearch = connect(class extends React.Component<IFoodSearchProps
                     </Menu.Item>
                     <Header as="h4" color="olive"> Here you can find nutritional information for your favorite foods!</Header>
                     <Menu.Item as='a' position="right" style={{ marginTop: '1em', marginRight: '1em' }} onClick={() => this.goToBasket()}>
-                        <Icon name="cart arrow down" size="big"></Icon>
+                        <Icon name="book" size="big"></Icon>
 
                         {basketRecipes &&
                             <Label color='red' floating> {basketRecipes.length}</Label>}

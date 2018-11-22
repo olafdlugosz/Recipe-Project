@@ -58,7 +58,7 @@ export const CheckoutItemDetail = connect(class extends React.Component<ICheckou
       </Menu.Item>
             </GridColumn>
             <Menu.Item as='a' position="right" style={{ marginTop: '1em', marginLeft: '3em' }} onClick={() => location.href = "#/Checkout"}>
-              <Icon name="cart arrow down" size="big"></Icon>
+              <Icon name="book" size="big"></Icon>
 
               {basketRecipes &&
                 <Label color='red' floating> {basketRecipes.length}</Label>}

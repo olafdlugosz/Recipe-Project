@@ -68,7 +68,7 @@ export const RecipeDetail = connect(class extends React.Component<IRecipeDetailP
           </Menu.Item>
             </GridColumn>
             <Menu.Item as='a' position="right" style={{ marginTop: '1em', marginLeft: '3em' }} onClick={() => this.goToBasket()}>
-              <Icon name="cart arrow down" size="big"></Icon>
+              <Icon name="book" size="big"></Icon>
 
               {basketRecipes &&
                 <Label color='red' floating> {basketRecipes.length}</Label>}
