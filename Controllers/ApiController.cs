@@ -35,15 +35,16 @@ namespace LerniaReact.Controllers
             await Query($"https://api.edamam.com/api/food-database/nutrients?app_id={FOOD_DATABASE_ID}&app_key={FOOD_DATABASE_KEY}");
 
         }
-        [Route("SendMail/{TargetMail}/{MailTitle}/{MailBody}")]
-        public void SendMail(string TargetMail, string MailTitle, string MailBody)
+        [HttpPost]
+        [Route("SendMail/{TargetMail}/{MailTitle}")]
+        public void SendMail(string TargetMail, string MailTitle, [FromBody]string MailBody)
         {
 
             try
             {
                 string SourceMail = "recipe.project.lernia@gmail.com";
                 string Password = "recipeproject666";
-
+                
                 var client = new SmtpClient("smtp.gmail.com", 587)
                 {
                     Credentials = new NetworkCredential(SourceMail, Password),

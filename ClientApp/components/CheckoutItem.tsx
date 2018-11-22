@@ -42,8 +42,8 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
     }
     private createMessageBody = () => {
         
-        let ingredientsList = this.props.checkoutItem.ingredients.map((x: IIngredients) => {
-            return x.text
+        let ingredientsList = this.props.checkoutItem.ingredients.map((x: IIngredients, index: number) => {
+            return  x.text
         })
         console.log("IngredientsList: ", ingredientsList)
         return ingredientsList.toString();
@@ -57,13 +57,22 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
         }else{
         let targetMail = this.state.mailAdress;
         let mailTitle = this.props.checkoutItem.label
-        let messageBody = "hello"
+         let messageBody = this.createMessageBody()
     
         console.log("targetmail: ", targetMail)
         console.log("mailTitle", mailTitle);
 
-        console.log("messageBody: ", messageBody)
-        fetch(`api/SendMail/${targetMail}/${mailTitle}/${messageBody}`).then(() => {console.log("Email Sent!")}).catch(error => console.log(error))}
+        // console.log("messageBody: ", messageBody)
+        fetch(`api/SendMail/${targetMail}/${mailTitle}`,{
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(messageBody)
+      
+          }
+        ).then(() => {console.log("Email Sent!")}).catch(error => console.log(error))}
     }
     private formatCheckoutItemLabel = (label: string) => {
         let stringToSplit = label.split(" ");

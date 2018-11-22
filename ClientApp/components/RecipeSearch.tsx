@@ -391,6 +391,8 @@ export const RecipeSearch = connect(class extends React.Component<IRecipeSearchP
                                         <Button circular icon disabled={!recipes ? true : false} onClick={() => this.handleNextClick()}>
                                             <Icon name="arrow circle right" size="huge" />
                                         </Button>
+                                        <Header as ="h2" style={{marginLeft: "40px"}}>{this.state.startIndex} - {this.state.lastIndex}</Header>
+                                        
                                     </div>
                                 </Segment>
                             </GridColumn>
