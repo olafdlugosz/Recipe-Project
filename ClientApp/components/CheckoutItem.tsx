@@ -62,10 +62,6 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
             ).catch(error => console.log(error))
         }
     }
-    private formatCheckoutItemLabel = (label: string) => {
-        let stringToSplit = label.split(" ");
-        return stringToSplit[0] + " " + stringToSplit[1];
-    }
     private onTextChange = (e: React.SyntheticEvent<HTMLInputElement>) => {
         this.setState({ mailAdress: e.currentTarget.value, validateInput: false });
     }
@@ -108,7 +104,7 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
                             </Grid.Column>
                         </Grid>
                     </Popup>
-                    {checkoutItem.label.length > 35 ? this.formatCheckoutItemLabel(checkoutItem.label) : checkoutItem.label}
+                    { checkoutItem.label}
                 </Header>
                 <Image size="small" label={checkoutItem.source} src={checkoutItem.image}></Image>
                 <div>
