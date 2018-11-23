@@ -90,7 +90,7 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
 
         return (
             <div>
-                <Header as="h3">{checkoutItem.label.length > 35 ? this.formatCheckoutItemLabel(checkoutItem.label) : checkoutItem.label}
+                <Header as="h3">
                     <Popup trigger={<Icon style={{ marginLeft: "5px" }} size="large" name="mail"></Icon>} flowing on="click">
                         <Grid centered divided columns={1}>
                             <Grid.Column textAlign='center'>
@@ -108,6 +108,7 @@ export class CheckoutItem extends React.Component<ICheckoutItemProps, ICheckoutI
                             </Grid.Column>
                         </Grid>
                     </Popup>
+                    {checkoutItem.label.length > 35 ? this.formatCheckoutItemLabel(checkoutItem.label) : checkoutItem.label}
                 </Header>
                 <Image size="small" label={checkoutItem.source} src={checkoutItem.image}></Image>
                 <div>
